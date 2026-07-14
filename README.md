@@ -19,6 +19,112 @@
 
 ---
 
+## July 14, 2026
+
+### 📝 To-Do (2026-03-18)
+
+- [X] Study Bayes Filter theory
+
+### 📌 Notes
+
+- What is Bayes Filter?
+  - Before discussing the Bayes Filter, let's first briefly understand what Bayes' theorem is.
+  - Bayes' theorem, which you might hear about in probability class, refers to the process of inferring the probability of an event based on previous experience and current evidence. Let me explain this a bit more[...]
+  - Bayes Filter can be understood as a filter that repeatedly uses Bayes' theorem.
+  <img src="https://github.com/Kim-SeongGeon/AISL/blob/main/Image/State Estimation.png" width="400"/>
+
+  - State estimation refers to determining the robot's state $x$ at time $t$ based on the robot's observations $z$ and the robot's control commands $u$.
+  - The above equation estimates the robot's state $x$ at time $t$ considering the given observations $z$ and control commands $u$ from 1 to $t$.
+  - Adding the meaning of recursive means estimating the robot's state $x_t$ using the robot's previous state $x_{t-1}$.
+  - Let's use the most famous example of Bayes Filter - finding the robot's location - to understand it.
+  <img src="https://github.com/Kim-SeongGeon/AISL/blob/main/Image/Bayes Filter example_1.png" width="400"/>
+
+  - Let's assume the robot is in a 1D space and can determine whether it's a door or not. And let's say the robot knows nothing about the global environment. Initially, the robot is equally likely to be anywhere[...]
+  - When the robot moves and observes a door, $bel(x)$ changes as follows. (Since a door was observed, the probability of the robot being in front of a door is judged to be high[...]
+  <img src="https://github.com/Kim-SeongGeon/AISL/blob/main/Image/Bayes Filter example_2.png" width="450"/>
+
+  - Let's move the robot forward a bit using the calculated $bel(x)$.
+  <img src="https://github.com/Kim-SeongGeon/AISL/blob/main/Image/Bayes Filter example_3.png" width="400"/>
+
+  - The shape of $bel(x)$ we predicted remains the same, but since there is uncertainty about exactly how far the robot moved, the probability distribution is somewhat spread out[...]
+  - And let's receive a new observation value once more.
+  <img src="https://github.com/Kim-SeongGeon/AISL/blob/main/Image/Bayes Filter example_4.png" width="400"/>
+
+  - We can obtain a new $bel(x)$ by combining the new observation value $p(z|x)$ and the existing $bel(x)$ probability distribution.
+  - In this way, using the robot's previous $bel(x)$ value and observation value $(p(z|x))$, representing the current $bel(x)$ value is what Bayes Filter is.
+
+- Deriving Bayes Filter Equation
+  - Before deriving the equation, reminding basic knowledge about probability:
+    1. Bayes' theorem
+    2. Markov Property / Assumption
+    3. Law of Total Probability
+   
+  - Bayes' theorem
+    - When we summarize Bayes' theorem that we've seen so far on one slide, it looks like this:
+    <img src="https://github.com/Kim-SeongGeon/AISL/blob/main/Image/Bayes' theorem.png" width="400"/>
+
+  - Markov Property / Assumption
+    - What is Markov Property / Assumption then?
+    - In a nutshell, when predicting a future state, it is only affected by the current state and is not affected by all previous past states[...]
+
+  - Law of Total Probability
+    - Summarizing the Law of Total Probability on one slide looks like this:
+    - A law used to derive the total probability $(p(x))$ without conditions from the conditional probability $(p(x|y))$.
+    - Marginalization is similar to the Law of Total Probability, with the only difference being that it uses joint probability instead of conditional probability.
+    <img src="https://github.com/Kim-SeongGeon/AISL/blob/main/Image/Law of Total Probability.png" width="400"/>
+
+  - Now let's examine the Bayes Filter mathematically in detail.
+  - First, defining $bel(x_t)$ at time $t$ looks like this:
+  <img src="https://github.com/Kim-SeongGeon/AISL/blob/main/Image/Bayes Filter Equation_1.png" width="400"/>
+
+  - Applying Bayes' Rule, it can be changed to:
+  - Applying $p(x,y) = p(y|x)p(x)$.
+  <img src="https://github.com/Kim-SeongGeon/AISL/blob/main/Image/Bayes Filter Equation_2.png" width="400"/>
+
+  - In the above equation, the first part can be simplified by applying Markov Assumption.
+  - The assumption that previous values $(z_{1:t-1}, u_{1:t}$ are not considered to find $z_t$, and $u_t$ is the current value but doesn't affect finding $z_t$.
+  <img src="https://github.com/Kim-SeongGeon/AISL/blob/main/Image/Bayes Filter Equation_3.png" width="400"/>
+
+  - The equation in the second block can also be transformed using the Law of Total Probability.
+  <img src="https://github.com/Kim-SeongGeon/AISL/blob/main/Image/Bayes Filter Equation_4.png" width="400"/>
+
+  - In the above equation, applying Markov Assumption once more simplifies the equation.
+  - The assumption that previous values $(z_{1:t-1}, u_{1:t-1})$ are not considered to find $x_t$.
+  <img src="https://github.com/Kim-SeongGeon/AISL/blob/main/Image/Bayes Filter Equation_5.png" width="400"/>
+
+  - In the above equation, when calculating $p(x_{t-1})$ in the last block, $u_t$ doesn't need to be considered, so it is removed.
+  <img src="https://github.com/Kim-SeongGeon/AISL/blob/main/Image/Bayes Filter Equation_6.png" width="400"/>
+
+  - Using the previously defined $bel(x_{t-1})$, writing the equation in recursive form looks like this:
+  <img src="https://github.com/Kim-SeongGeon/AISL/blob/main/Image/Bayes Filter Equation_7.png" width="400"/>
+
+### ✅ Conclusion
+
+- 
+
+<p><br></p>
+
+---
+
+## July 15, 2026
+
+### 📝 To-Do (2026-07-15)
+
+- [ ] Continue studying Bayes Filter and write conclusion notes
+- [ ] Prepare for next week's research discussion
+
+### 📌 Notes
+
+- (To be updated)
+
+### ✅ Conclusion
+
+- (To be updated)
+
+<p><br></p>
+
+---
+
 ## March 17, 2026
 
 ### 📝 To-Do (2026-03-17)
@@ -49,9 +155,9 @@
   <img src="https://github.com/Kim-SeongGeon/AISL/blob/main/Image/Visual-InertialStateEstimatorDiagram.png" width="450"/>
   
   - VINS-Mono first goes through a Measurement Preprocessing process. Features are extracted from images, and while tracking, IMU measurements are preintegrated between two consecutive images
-  - After the Measurement Preprocessing process, it undergoes an initialization process. It calculates all the values needed for subsequent non-linear optimization. For example, pose, velocity, etc.
+  - After the Measurement Preprocessing process, it undergoes an initialization process. It calculates all the values needed for subsequent non-linear optimization. For example, pose, velocity, et[...]
   - With the initialized values, the Visual-Inertial Odometry Module with the Relocalization Module uses pre-integrated IMU measurements and feature observations using a tightly-coupled approach
-  - VINS-Mono proposes methods for initializing with monocular camera and IMU values, methods for selecting keyframes, methods for performing good tracking, and includes loop closure and pose graph optimization
+  - VINS-Mono proposes methods for initializing with monocular camera and IMU values, methods for selecting keyframes, methods for performing good tracking, and includes loop closure and pose grap[...]
   - The notation used in this paper is as follows:
     - $()^c$ : camera frame
     - $()^w$ : world frame
@@ -64,14 +170,14 @@
     - $\hat{(\cdot)}$ : estimated value or noisy measurement
    
 - 3. Measurement Preprocessing
-  - Looking in detail at the preprocessing process of visual and IMU measurements, visual measurement involves attempting tracking in consecutive images and extracting new features in the current frame
+  - Looking in detail at the preprocessing process of visual and IMU measurements, visual measurement involves attempting tracking in consecutive images and extracting new features in the current [...]
   - Vision Processing Front End
-    - When a new image arrives, KLT Sparse Optical Flow Algorithm is performed. To find features, the GoodFeatureToTrack() function from OpenCV is used. This function can efficiently track about 100-300 feature points
+    - When a new image arrives, KLT Sparse Optical Flow Algorithm is performed. To find features, the GoodFeatureToTrack() function from OpenCV is used. This function can efficiently track about 1[...]
       - KLT Sparse Optical Flow is the core algorithm in VINS-Mono's visual preprocessing stage that tracks where previously found feature points go in the next frame
         - 3 assumptions of the KLT algorithm
           1. Brightness Constancy: When the camera moves over a very short time, the brightness or color of a specific object does not change
           2. Small Motion: Since the time is short, objects and pixels are assumed to move only slightly
-          3. Spatial Coherence: This is the most core idea of KLT. Tracking a single pixel alone is prone to failure due to noise. So neighboring pixels are considered together to maintain spatial coherence
+          3. Spatial Coherence: This is the most core idea of KLT. Tracking a single pixel alone is prone to failure due to noise. So neighboring pixels are considered together to maintain spatial[...]
         - Why "Sparse" Optical Flow?
           => Computing the motion of all 2 million pixels in the screen is called 'Dense Optical Flow'. However, this requires too much computation to operate in real-time
         - So VINS-Mono selects only about 100-300 distinct feature points like corners that are easy to track on the screen. The computational load is dramatically reduced
@@ -86,7 +192,7 @@
             - Result: feature points that don't match the actual camera motion (outliers) are ruthlessly removed at this point
           - Why RANSAC is good
             - Most algorithms try to average all data to calculate. So if there's even one huge error (outlier) in the data, the result is affected
-            - On the other hand, RANSAC takes the strategy of "there will inevitably be fakes mixed in, so let's try several times until we're lucky enough to pick only real ones". So even if half the data consists of outliers, it can find the correct answer
+            - On the other hand, RANSAC takes the strategy of "there will inevitably be fakes mixed in, so let's try several times until we're lucky enough to pick only real ones". So even if half[...]
       - During this process, keyframes are also selected using two criteria
         - If the parallax (pixel difference in features) between Last Frame and Current Frame exceeds a certain threshold, it is distinguished as a new keyframe
         - Distinguished by tracking quality
@@ -112,14 +218,14 @@
 - Found and decided to seriously read the VINS paper that is the origin of OpenVINS
 - [VINS-Mono: A Robust and Versatile Monocular Visual-Inertial State Estimator](https://arxiv.org/pdf/1708.03852)
   - 1. Core philosophy of VINS-Mono: 'Solve everything together (Tightly-Coupled)'
-    - In the past, loosely-coupled approaches were used where position calculated by camera and position predicted by IMU were computed separately and then roughly combined. However, VINS-Mono combines feature points seen by the camera and IMU prediction into one big optimization problem and solves them simultaneously
+    - In the past, loosely-coupled approaches were used where position calculated by camera and position predicted by IMU were computed separately and then roughly combined. However, VINS-Mono co[...]
   - 2. The paper's 4-stage pipeline (flowchart)
     - 1. Measurement Preprocessing
       - Vision: uses KLT algorithm to track feature points in incoming images
-      - IMU Pre-Integration: IMU is much faster than camera. The technique of accumulating numerous IMU data between camera frames into one unified value beforehand. This is the key to real-time performance
+      - IMU Pre-Integration: IMU is much faster than camera. The technique of accumulating numerous IMU data between camera frames into one unified value beforehand. This is the key to real-time [...]
     - 2. Initialization
       - Using only one monocular camera, actual distance (scale) cannot be known
-      - VINS-Mono proposes a powerful algorithm that succeeds in initialization even while the robot is moving on-the-fly, not just at rest. It combines the rough skeleton drawn by the camera with IMU measurements
+      - VINS-Mono proposes a powerful algorithm that succeeds in initialization even while the robot is moving on-the-fly, not just at rest. It combines the rough skeleton drawn by the camera wit[...]
     - 3. Sliding Window-based Local VIO
       - Optimization-based approaches have the disadvantage of requiring too much computation
       - To solve this, it discards old data and uses the Sliding Window technique of keeping only the recent N critical frames (Key Frames) in the window and optimizing
@@ -127,8 +233,8 @@
     - 4. 4-DOF Global Optimization (Relocalization & Pose Graph Optimization)
       - No matter how well optimized, error accumulates over long distances
       - When already-visited places are recognized using DBoW2 (Loop Detection), the current location is corrected
-      - The most impressive part is that only '4-DOF (x, y, z, yaw)' is optimized. Since the IMU continuously feels gravity, the robot's tilt (roll, pitch) is already absolutely accurate without additional optimization
-     
+      - The most impressive part is that only '4-DOF (x, y, z, yaw)' is optimized. Since the IMU continuously feels gravity, the robot's tilt (roll, pitch) is already absolutely accurate without [...]
+      
 ### ✅ Conclusion
 
 - This paper is judged to have relevance to my personal research topic, so continuing to read should be beneficial
@@ -148,17 +254,17 @@
 
 - Selected and tested 3 datasets from those provided by OpenVINS
   - The rosbag for the test dataset was not downloading, so I converted it to rosbag2 after downloading and then performed rosbag play
-- OpenVINS, as the name suggests, is an acronym for 'Open-Source Visual-Inertial Navigation System', which combines a camera (visual) and an inertial measurement device (IMU, inertial) to estimate the robot's position and orientation
+- OpenVINS, as the name suggests, is an acronym for 'Open-Source Visual-Inertial Navigation System', which combines a camera (visual) and an inertial measurement device (IMU, inertial) to estimat[...]
   - 1. OpenVINS Core: MSCKF-based filter method
     - The biggest feature is using the MSCKF (Multi-State Constraint Kalman Filter) algorithm
-      - => MSCKF uses IMU and camera sensors to perform measurement updates on fixed features (combining new noisy sensor measurements with previous prediction states to improve and refine the state)
+      - => MSCKF uses IMU and camera sensors to perform measurement updates on fixed features (combining new noisy sensor measurements with previous prediction states to improve and refine the st[...]
     - Difference from ORB-SLAM: ORB-SLAM primarily uses 'optimization' based approach to draw the entire map and determine position, while OpenVINS is 'filter' based
-    - Sliding Window: Instead of keeping all historical data, maintains only a few recent camera frames while updating the state. So computational load is low and is suitable for real-time systems
+    - Sliding Window: Instead of keeping all historical data, maintains only a few recent camera frames while updating the state. So computational load is low and is suitable for real-time system[...]
       
   - 2. Why use OpenVINS?
     - Online Calibration: extrinsics (relative position between camera and IMU) or time offsets are updated in real-time while the robot is moving
     - Extensibility: modular structure makes it very easy to add new sensors or replace parts of algorithms
-    - Accuracy and Speed: despite being EKF (Extended Kalman Filter) based, shows high precision comparable to optimization-based algorithms. Especially for drones and robots with limited resources
+    - Accuracy and Speed: despite being EKF (Extended Kalman Filter) based, shows high precision comparable to optimization-based algorithms. Especially for drones and robots with limited resourc[...]
       
   - 3. OpenVINS Architecture
     - Feature Tracking: finds and tracks corners like FAST mentioned earlier from camera images
@@ -182,9 +288,9 @@
 
 ### 📌 Notes
 
-- I used the dataset provided by EuRoC, but I couldn't find it at this point, so I tested it based on the public data provided by KITTI, but I couldn't see anything on the rviz screen and encountered continuous errors
-  - When I investigated the cause of the problem, the terminal running the subscribe.launch file showed [Init]: failed static init: platform moving too much, which means initial state estimation failed in the KITTI dataset because the platform was moving too much
-- While thoroughly examining the tutorials provided by OpenVINS, I found that data (ros1 cannot be downloaded at this point, https://docs.openvins.com/gs-datasets.html <- reference) can be downloaded as zip files based on ros2 standard, so I plan to test with different datasets
+- I used the dataset provided by EuRoC, but I couldn't find it at this point, so I tested it based on the public data provided by KITTI, but I couldn't see anything on the rviz screen and encount[...]
+  - When I investigated the cause of the problem, the terminal running the subscribe.launch file showed [Init]: failed static init: platform moving too much, which means initial state estimation [...]
+- While thoroughly examining the tutorials provided by OpenVINS, I found that data (ros1 cannot be downloaded at this point, https://docs.openvins.com/gs-datasets.html <- reference) can be downlo[...]
   
 <img src="https://github.com/Kim-SeongGeon/AISL/blob/main/Image/OpenVINS(KITTI).png" width="250"/>
 <img src="https://github.com/Kim-SeongGeon/AISL/blob/main/Image/OpenVINS(EuRoC).png" width="250"/>
@@ -207,11 +313,12 @@
 
 ### 📌 Notes
 
-- If I switch to Visual SLAM based, what I want is ORB-SLAM, but I decided to test this first by recommending the OpenVINS project to a lab member who has experience in switching to Visual SLAM based
+- If I switch to Visual SLAM based, what I want is ORB-SLAM, but I decided to test this first by recommending the OpenVINS project to a lab member who has experience in switching to Visual SLAM b[...]
   - It was very difficult because I experienced several out-of-memory problems in the middle, but I successfully ran OpenVINS simulation
   - The two screens after completion of the drive are performance indicators and visualization results showing how accurately OpenVINS estimates the robot's movement (trajectory)
   - First Image: Trajectory visualization (a drawing of the robot's path on a 2D plane)
   - Second Image: estimation accuracy (a data window that numerically shows "how different is the position I calculated from the real thing?" as the simulation runs in real-time)
+
 <img src="https://github.com/Kim-SeongGeon/AISL/blob/main/Image/Trajectory%20Visualization.jpeg" width="250"/>
 <img src="https://github.com/Kim-SeongGeon/AISL/blob/main/Image/Estimation%20Accuracy.png" width="250"/>
 
@@ -262,15 +369,15 @@
 
 ### 📌 Notes
 
-- I have been working on multi-robot projects since I was an undergraduate research student, and in my first year of the master's program, I decided I should conduct personal research in this field
-- Since employment in a defense company is my ultimate goal, I investigated what kind of SW R&D talent the defense companies I want to join are looking for, and what topics I should choose to do well at that company
-  - If I prioritize employment, I need C++/Python-based algorithm implementation ability, practical projects and papers related to 'unmanned/robotics', and diverse robot/system architecture understanding
-  - Environmental characteristics considered when using multi-robot SLAM in defense or battlefield include GNSS vulnerability (indoor, underground, disaster/warfare zones, electronic warfare), communication delays and disconnections (distributed operation, bandwidth limitations), sensor limitations (limited FoV LiDAR, noisy IMU, camera occlusion), and the need for rapid deployment and robustness
+- I have been working on multi-robot projects since I was an undergraduate research student, and in my first year of the master's program, I decided I should conduct personal research in this fie[...]
+- Since employment in a defense company is my ultimate goal, I investigated what kind of SW R&D talent the defense companies I want to join are looking for, and what topics I should choose to do [...]
+  - If I prioritize employment, I need C++/Python-based algorithm implementation ability, practical projects and papers related to 'unmanned/robotics', and diverse robot/system architecture under[...]
+  - Environmental characteristics considered when using multi-robot SLAM in defense or battlefield include GNSS vulnerability (indoor, underground, disaster/warfare zones, electronic warfare), co[...]
   - Based on this, I narrowed down to about 3 topics that fit well with defense company robots/unmanned systems and are suitable for papers and portfolios
-  1. Distributed Multi-Robot SLAM considering communication constraints: robots share partial maps and poses without a central server (or with minimal dependence), and can reliably perform collaborative mapping even during communication disconnections or delays
-  2. Robust Multi-Robot SLAM with limited sensors and fields of view: cooperation and robust loop closure in defense environments with common sensor compromises (limited FoV LiDAR, noisy IMU, camera occlusion)
-  3. Multi-Robot SLAM-based swarm mission planning (with MUM-T in mind): directly utilize multi-SLAM results (shared maps, uncertainty of each robot) for swarm path planning, exploration, and surveillance mission allocation
-  - Among these, if thesis and demo implementation are to be done within 2 years of master's degree, 'Distributed Multi-Robot SLAM and Reconnaissance Mission Planning Considering Communication and Sensor Constraints' could be a comprehensive main topic that combines 1st and 3rd well
+  1. Distributed Multi-Robot SLAM considering communication constraints: robots share partial maps and poses without a central server (or with minimal dependence), and can reliably perform collab[...]
+  2. Robust Multi-Robot SLAM with limited sensors and fields of view: cooperation and robust loop closure in defense environments with common sensor compromises (limited FoV LiDAR, noisy IMU, cam[...]
+  3. Multi-Robot SLAM-based swarm mission planning (with MUM-T in mind): directly utilize multi-SLAM results (shared maps, uncertainty of each robot) for swarm path planning, exploration, and sur[...]
+  - Among these, if thesis and demo implementation are to be done within 2 years of master's degree, 'Distributed Multi-Robot SLAM and Reconnaissance Mission Planning Considering Communication an[...]
  
 - Brief Master's 1st-2nd Year Roadmap (Research + Job Preparation)
   - Year 1: Building foundation + 1 paper-level results
