@@ -19,6 +19,25 @@
 
 ---
 
+## July 15, 2026
+
+### 📝 To-Do (2026-07-15)
+
+- [ ] Continue studying Bayes Filter and write conclusion notes
+- [ ] Prepare for next week's research discussion
+
+### 📌 Notes
+
+- (To be updated)
+
+### ✅ Conclusion
+
+- (To be updated)
+
+<p><br></p>
+
+---
+
 ## July 14, 2026
 
 ### 📝 To-Do (2026-03-18)
@@ -101,25 +120,6 @@
 ### ✅ Conclusion
 
 - 
-
-<p><br></p>
-
----
-
-## July 15, 2026
-
-### 📝 To-Do (2026-07-15)
-
-- [ ] Continue studying Bayes Filter and write conclusion notes
-- [ ] Prepare for next week's research discussion
-
-### 📌 Notes
-
-- (To be updated)
-
-### ✅ Conclusion
-
-- (To be updated)
 
 <p><br></p>
 
