@@ -75,7 +75,28 @@
 
   - 그렇다면 자세하게 Bayes Filter를 수식적으로 파헤쳐보자.
   - 우선 $t$번째 시간의 $bel(x_t)$를 정의하면 아래와 같다.
-  
+  <img src="https://github.com/Kim-SeongGeon/AISL/blob/main/Image/Bayes Filter Equation_1.png" width="400"/>
+
+  - 이를 Bayes' Rule을 적용하면 아래와 같이 바꿀 수 있다.
+  - $p(x,y) = p(y|x)p(x)$를 적용했다고 이해했다.
+  <img src="https://github.com/Kim-SeongGeon/AISL/blob/main/Image/Bayes Filter Equation_2.png" width="400"/>
+
+  - 위 식에서 첫 번째 부분을 Markov Assumption을 적용하여 간략하게 나타낼 수 있다.
+  - $z_t$를 구하는데 그 이전 값들 $(z_{1:t-1}, u_{1:t}$은 고려하지 않는다는 가정, $u_t$는 현재 값이지만 $z_t$를 구하는데는 영향을 끼치지 않는다.
+  <img src="https://github.com/Kim-SeongGeon/AISL/blob/main/Image/Bayes Filter Equation_3.png" width="400"/>
+
+  - Law of Total Probability를 활용해서 위 식의 두 번째 Block의 식도 변형할 수 있다.
+  <img src="https://github.com/Kim-SeongGeon/AISL/blob/main/Image/Bayes Filter Equation_4.png" width="400"/>
+
+  - 위 식에서 또 한 번 Markov Assumption을 적용하여 식을 간단하게 나타낼 수 있다.
+  - $x_t$를 구하는데 그 이전 값들 $(z_{1:t-1}, u_{1:t-1})$은 고려하지 않는다는 가정
+  <img src="https://github.com/Kim-SeongGeon/AISL/blob/main/Image/Bayes Filter Equation_5.png" width="400"/>
+
+  - 위 식에서 맨 마지막 Block에 $p(x_{t-1})$을 구할 때 $u_t$는 고려하지 않아도 되므로 제거한다.
+  <img src="https://github.com/Kim-SeongGeon/AISL/blob/main/Image/Bayes Filter Equation_6.png" width="400"/>
+
+  - 이전의 정의한 $bel(x_{t-1})$을 이용하여 식을 Recursive 형태로 써주면 아래와 같다.
+  <img src="https://github.com/Kim-SeongGeon/AISL/blob/main/Image/Bayes Filter Equation_7.png" width="400"/>
 
 ### ✅ 결론
 
