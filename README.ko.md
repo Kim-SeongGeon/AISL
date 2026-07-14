@@ -40,6 +40,7 @@
   <img src="https://github.com/Kim-SeongGeon/AISL/blob/main/Image/Bayes Filter example_1.png" width="450"/>
 
   - 로봇은 1차원 공간을 가정하고, Door인지 아닌지 판단할 수 있다. 그리고 Global Environment에 대해 아무것도 모르는 상태라고 해보자. 처음은 아무도 모르는 상태이기 때문에 로봇의 위치를 Uniform distribution으로 나타낼 수 있다.
+  - 로봇이 움직이면서 문을 관찰했을 경우, $bel(x)$는 아래와 같이 변한다. (문을 관찰했으므로 문 앞에 로봇에 위치가 있을 확률이 높다고 판단하는 것이다.)
 
 ### ✅ 결론
 
