@@ -31,16 +31,37 @@
   - Bayes Filter를 이야기 하기 전 우선 베이즈 정리(Bayes' theorem)가 무엇인지 간단히 알아보자.
   - 확률 시간에 들어볼 법한 베이즈 정리는 이전의 경험과 현재의 증거를 토대로 어떤 사건의 확률을 추론하는 과정을 이야기한다. 이 말을 조금 더 확률에 나오는 용어들을 활용해서 이야기하면 prior와 likelihood를 이용하여 posterior를 구할 수 있다는 의미이다.
   - Bayes Filter는 이러한 Bayes' theorem를 반복적으로 사용하는 Filter로 이해하면 된다.
-  <img src="https://github.com/Kim-SeongGeon/AISL/blob/main/Image/State Estimation.png" width="450"/>
+  <img src="https://github.com/Kim-SeongGeon/AISL/blob/main/Image/State Estimation.png" width="400"/>
 
   - State Estimation이란 $t$라는 시간에서 로봇의 상태 $x$를 로봇의 관찰값(observation) $z$와, 로봇의 Control command $u$에 의해서 결정하게 되는 것이다.
   - 위 식은 1부터 $t$까지 주어진 observation $z$와 control command $u$를 고려하여 $t$번째 로봇의 상태 $x$를 추정하는 것이다.
   - 여기에 Recursive의 의미를 붙이면 로봇의 상태 $x_{t-1}$를 활용해서 로봇의 상태 $x_t$를 추정하는 것이다.
   - Bayes Filter의 가장 유명한 예제인 Robot의 위치 찾는 것을 예를 들어 알아보자.
-  <img src="https://github.com/Kim-SeongGeon/AISL/blob/main/Image/Bayes Filter example_1.png" width="450"/>
+  <img src="https://github.com/Kim-SeongGeon/AISL/blob/main/Image/Bayes Filter example_1.png" width="400"/>
 
   - 로봇은 1차원 공간을 가정하고, Door인지 아닌지 판단할 수 있다. 그리고 Global Environment에 대해 아무것도 모르는 상태라고 해보자. 처음은 아무도 모르는 상태이기 때문에 로봇의 위치를 Uniform distribution으로 나타낼 수 있다.
   - 로봇이 움직이면서 문을 관찰했을 경우, $bel(x)$는 아래와 같이 변한다. (문을 관찰했으므로 문 앞에 로봇에 위치가 있을 확률이 높다고 판단하는 것이다.)
+  <img src="https://github.com/Kim-SeongGeon/AISL/blob/main/Image/Bayes Filter example_2.png" width="450"/>
+
+  - 구한 $bel(x)$를 가지고 로봇을 앞으로 조금 움직여보자.
+  <img src="https://github.com/Kim-SeongGeon/AISL/blob/main/Image/Bayes Filter example_3.png" width="400"/>
+
+  - 우리가 예측했던 $bel(x)$의 모양은 그대로이지만 로봇이 정확하게 얼마나 움직였는지 불확실성이 존재하기 때문에, 확률 분포가 조금 퍼져있는 형태로 나타내졌다.
+  - 그리고 또 다시 한 번 새로운 관찰값을 받아보자.
+  <img src="https://github.com/Kim-SeongGeon/AISL/blob/main/Image/Bayes Filter example_4.png" width="400"/>
+
+  - 새로운 관찰값 $p(z|x)$와 기존의 $bel(x)$의 확률 분포를 합쳐 새로운 $bel(x)$를 구할 수 있다.
+  - 이처럼 로봇의 이전 $bel(x)$ 값과 observation 값 $(p(z|x))$을 활용해서 현재의 $bel(x)$ 값을 나타내는 것이 Bayes Filter이다.
+
+- Bayes Filter 식 유도
+  - 먼저 식 유도를 하기 전 확률에 대한 기본적인 지식을 Remind 해보면,
+    1. Bayes' theorem
+    2. Markov Property / Assumption
+    3. Law of Total Probability
+   
+  - Bayes' theorem
+  - 우리가 지금까지 봤던 베이즈 정리(Bayes' theorem)를 한 장의 슬라이드로 정리하면 아래와 같다.
+  
 
 ### ✅ 결론
 
