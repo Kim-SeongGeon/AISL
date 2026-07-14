@@ -71,7 +71,10 @@
     - Law of Total Probability도 한 장의 슬라이드로 정리하면 아래와 같다.
     - 조건부 확률 $(p(x|y))$로부터 조건이 붙지 않은 전체 확률 $(p(x))$를 구할 때 사용하는 법칙이다.
     - Marginalization은 Law of Total Probability와 비슷한데 조건부 확률 대신 결합 확률을 사용했다는 차이점만 있다.
-    
+    <img src="https://github.com/Kim-SeongGeon/AISL/blob/main/Image/Law of Total Probability.png" width="400"/>
+
+  - 그렇다면 자세하게 Bayes Filter를 수식적으로 파헤쳐보자.
+  - 우선 $t$번째 시간의 $bel(x_t)$를 정의하면 아래와 같다.
   
 
 ### ✅ 결론
