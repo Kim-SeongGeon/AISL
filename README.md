@@ -23,8 +23,7 @@
 
 ### 📝 To-Do (2026-07-15)
 
-- [ ] Continue studying Bayes Filter and write conclusion notes
-- [ ] Prepare for next week's research discussion
+- [ ] FAST-LIO Practice (Parameter Value Modification)
 
 ### 📌 Notes
 
@@ -40,7 +39,7 @@
 
 ## July 14, 2026
 
-### 📝 To-Do (2026-03-18)
+### 📝 To-Do (2026-07-14)
 
 - [X] Study Bayes Filter theory
 
@@ -48,7 +47,7 @@
 
 - What is Bayes Filter?
   - Before discussing the Bayes Filter, let's first briefly understand what Bayes' theorem is.
-  - Bayes' theorem, which you might hear about in probability class, refers to the process of inferring the probability of an event based on previous experience and current evidence. Let me explain this a bit more[...]
+  - Bayes' theorem, which you might hear about in probability class, refers to the process of inferring the probability of an event based on previous experience and current evidence. Let me explai[...]
   - Bayes Filter can be understood as a filter that repeatedly uses Bayes' theorem.
   <img src="https://github.com/Kim-SeongGeon/AISL/blob/main/Image/State Estimation.png" width="400"/>
 
@@ -58,7 +57,7 @@
   - Let's use the most famous example of Bayes Filter - finding the robot's location - to understand it.
   <img src="https://github.com/Kim-SeongGeon/AISL/blob/main/Image/Bayes Filter example_1.png" width="400"/>
 
-  - Let's assume the robot is in a 1D space and can determine whether it's a door or not. And let's say the robot knows nothing about the global environment. Initially, the robot is equally likely to be anywhere[...]
+  - Let's assume the robot is in a 1D space and can determine whether it's a door or not. And let's say the robot knows nothing about the global environment. Initially, the robot is equally likely[...]
   - When the robot moves and observes a door, $bel(x)$ changes as follows. (Since a door was observed, the probability of the robot being in front of a door is judged to be high[...]
   <img src="https://github.com/Kim-SeongGeon/AISL/blob/main/Image/Bayes Filter example_2.png" width="450"/>
 
@@ -155,9 +154,9 @@
   <img src="https://github.com/Kim-SeongGeon/AISL/blob/main/Image/Visual-InertialStateEstimatorDiagram.png" width="450"/>
   
   - VINS-Mono first goes through a Measurement Preprocessing process. Features are extracted from images, and while tracking, IMU measurements are preintegrated between two consecutive images
-  - After the Measurement Preprocessing process, it undergoes an initialization process. It calculates all the values needed for subsequent non-linear optimization. For example, pose, velocity, et[...]
+  - After the Measurement Preprocessing process, it undergoes an initialization process. It calculates all the values needed for subsequent non-linear optimization. For example, pose, velocity, e[...]
   - With the initialized values, the Visual-Inertial Odometry Module with the Relocalization Module uses pre-integrated IMU measurements and feature observations using a tightly-coupled approach
-  - VINS-Mono proposes methods for initializing with monocular camera and IMU values, methods for selecting keyframes, methods for performing good tracking, and includes loop closure and pose grap[...]
+  - VINS-Mono proposes methods for initializing with monocular camera and IMU values, methods for selecting keyframes, methods for performing good tracking, and includes loop closure and pose gra[...]
   - The notation used in this paper is as follows:
     - $()^c$ : camera frame
     - $()^w$ : world frame
@@ -170,14 +169,14 @@
     - $\hat{(\cdot)}$ : estimated value or noisy measurement
    
 - 3. Measurement Preprocessing
-  - Looking in detail at the preprocessing process of visual and IMU measurements, visual measurement involves attempting tracking in consecutive images and extracting new features in the current [...]
+  - Looking in detail at the preprocessing process of visual and IMU measurements, visual measurement involves attempting tracking in consecutive images and extracting new features in the current[...]
   - Vision Processing Front End
-    - When a new image arrives, KLT Sparse Optical Flow Algorithm is performed. To find features, the GoodFeatureToTrack() function from OpenCV is used. This function can efficiently track about 1[...]
+    - When a new image arrives, KLT Sparse Optical Flow Algorithm is performed. To find features, the GoodFeatureToTrack() function from OpenCV is used. This function can efficiently track about [...]
       - KLT Sparse Optical Flow is the core algorithm in VINS-Mono's visual preprocessing stage that tracks where previously found feature points go in the next frame
         - 3 assumptions of the KLT algorithm
           1. Brightness Constancy: When the camera moves over a very short time, the brightness or color of a specific object does not change
           2. Small Motion: Since the time is short, objects and pixels are assumed to move only slightly
-          3. Spatial Coherence: This is the most core idea of KLT. Tracking a single pixel alone is prone to failure due to noise. So neighboring pixels are considered together to maintain spatial[...]
+          3. Spatial Coherence: This is the most core idea of KLT. Tracking a single pixel alone is prone to failure due to noise. So neighboring pixels are considered together to maintain spatia[...]
         - Why "Sparse" Optical Flow?
           => Computing the motion of all 2 million pixels in the screen is called 'Dense Optical Flow'. However, this requires too much computation to operate in real-time
         - So VINS-Mono selects only about 100-300 distinct feature points like corners that are easy to track on the screen. The computational load is dramatically reduced
@@ -192,7 +191,7 @@
             - Result: feature points that don't match the actual camera motion (outliers) are ruthlessly removed at this point
           - Why RANSAC is good
             - Most algorithms try to average all data to calculate. So if there's even one huge error (outlier) in the data, the result is affected
-            - On the other hand, RANSAC takes the strategy of "there will inevitably be fakes mixed in, so let's try several times until we're lucky enough to pick only real ones". So even if half[...]
+            - On the other hand, RANSAC takes the strategy of "there will inevitably be fakes mixed in, so let's try several times until we're lucky enough to pick only real ones". So even if hal[...]
       - During this process, keyframes are also selected using two criteria
         - If the parallax (pixel difference in features) between Last Frame and Current Frame exceeds a certain threshold, it is distinguished as a new keyframe
         - Distinguished by tracking quality
