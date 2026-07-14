@@ -60,7 +60,18 @@
     3. Law of Total Probability
    
   - Bayes' theorem
-  - 우리가 지금까지 봤던 베이즈 정리(Bayes' theorem)를 한 장의 슬라이드로 정리하면 아래와 같다.
+    - 우리가 지금까지 봤던 베이즈 정리(Bayes' theorem)를 한 장의 슬라이드로 정리하면 아래와 같다.
+    <img src="https://github.com/Kim-SeongGeon/AISL/blob/main/Image/Bayes' theorem.png" width="400"/>
+
+  - Markov Property / Assumption
+    - 그렇다면 Markov Property / Assumption이란 무엇일까?
+    - 한 마디로 이야기하면 미래의 상태를 예측할 때, 현재의 상태에 대해서만 영향을 받고 그 이전 모든 과거의 상태에 대해서는 영향을 받지 않는다는 의미이다. 즉, 미래는 과거와 독립적인 확률 과정을 가진다는 의미이다.
+
+  - Law of Total Probability
+    - Law of Total Probability도 한 장의 슬라이드로 정리하면 아래와 같다.
+    - 조건부 확률 $(p(x|y))$로부터 조건이 붙지 않은 전체 확률 $(p(x))$를 구할 때 사용하는 법칙이다.
+    - Marginalization은 Law of Total Probability와 비슷한데 조건부 확률 대신 결합 확률을 사용했다는 차이점만 있다.
+    
   
 
 ### ✅ 결론
