@@ -110,9 +110,20 @@
   - 이전의 정의한 $bel(x_{t-1})$을 이용하여 식을 Recursive 형태로 써주면 아래와 같다.
   <img src="https://github.com/Kim-SeongGeon/AISL/blob/main/Image/Bayes Filter Equation_7.png" width="400"/>
 
+- Bayes Filter의 개념적인 접근
+  - Bayes Filter를 개념적으로 크게 두 가지로 분류할 수 있다.
+  <img src="https://github.com/Kim-SeongGeon/AISL/blob/main/Image/Bayes Filter's Conceptual approach.png" width="400"/>
+
+  - Prediction Step : 이전 값의 $bel(x_{t-1})$을 가지고 현재 control command인 $u_t$를 더하여 현재의 상태를 예측하는 단계이다.
+  - Correction Step : Prediction Step에서 구한 값과 현재 관찰되는 값 $(z_t)$을 가지고 정교하게 상태값을 계산한다.
+  - 여기서 배운 Bayes Filter는 단지 State estimation을 할 대 사용하는 Framework으로 이해하면 된다.
+  - Motion model 및 Observation model을 어떻게 정의하느냐, 확률 분포를 어떻게 가정하느냐, Parametric filter인가 Non-parametric filter인가 에 따라 다양하게 확장이 가능하다.
+ 
 ### ✅ 결론
 
-- 
+- Bayes Filter에 대해서 정리를 하면 state estimation를 할 때 자주 쓰이는 Framework라고 이해를 하면 된다.
+- 여러 Filter들의 기본이 되는 Filter이므로 잘 알아두는 것이 중요해 보인다.
+- 실제로 Bayes Filter를 사용할 때는 Motion model 및 Observation model을 어떻게 정의하느냐에 따라서 Bayes Filter를 구체적으로 설계할 수 있다.
 
 <p><br></p>
 
