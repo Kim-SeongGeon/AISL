@@ -106,6 +106,48 @@
   - Line 6에서는 covariance matrix를 업데이트 하는데, observation으로 인해 uncertainty가 줄어드는 방향으로 update를 진행하게 된다.
 
 - EKF란?
+  - Kalman Filter는 Model이 Linear하고, 모든 확률 분포는 가우시안 확률 분포를 가질 때 사용하는 Filter이다. 따라서 이 가정이 깨지게 되면 Kalman Filter는 제대로 작동하지 않는다.
+  - 하지만 실제 세계는 이러한 가정을 지키지 못하는 경우가 훨씬 많다. 예를 들어, 2D Plane에서의 Localization을 생각해보더라도 state vector에 방향에 대한 값을 추가해 주는데, 이때 sine과 cosine 값이 들어아기 때문에 model이 Non-linear하게 된다.
+  - 따라서 Kalman Filter를 확장시켜 Non-linear한 상황에서도 쓸 수 있게 해주는 Filter가 EKF이다.
+  - EKF는 Extended Kalman Filter의 줄임말이다.
+  - EKF는 말 그대로 Kalman Filter의 확장 버전이다. 단지 Model이 Non-linear하게만 정의되었을 뿐 알고리즘의 흐름은 Kalman Filter와 비슷하다.
+  - 우선 Non-linear한 model은 아래 이미지와 같이 정의할 수 있다.
+  <img src="https://github.com/Kim-SeongGeon/AISL/blob/main/Image/EKF_1.png" width="400"/>
+
+  - 이러한 Non-linear한 function이 문제가 되는 이뉴는 가우시안 확률 분포를 가지는 Input을 model에 넣었을 때 가우시안 확률 분포를 가지지 않는 Output이 나오기 때문이다.
+  - 따라서 이러한 문제를 해결하기 위해 Local Linearization이라는 과정을 거친다.
+  - Linearization은 1차 테일러 급수식(first order taylor expansion)으로 선형화를 진행하게 된다.
+  - EKF도 Kalman Filter와 마찬가지로 Prediction step과 Correction step을 거치는데, 이때 필요한 값을 아래 이미지와 같이 정의한다. 이때 Jacobian도 쓰이게 된다.
+  <img src="https://github.com/Kim-SeongGeon/AISL/blob/main/Image/EKF_2.png" width="400"/>
+
+  - Local Linearization을 하는데 영향을 미치는 요소는 크게 두 가지가 있다.
+    - 1차 테일러 급수로 선형화한 값과 실제 Non-linear한 model의 차이
+    - Input의 uncertainty (= Covariance Matrix)
+  - Input의 uncertainty가 작으면 표준편차가 작으므로, 확률 분포가 좁게 형성되고, 이는 테일러 급수로 선형화한 모델과 실제 Non-linear한 model의 차이를 적게 만들게 된다.
+  - EKF를 식으로 조금 더 자세하게 알아보면,
+  - Kalman Filter와 마찬가지로
+  - $[p(x_t|u_t, x_{t-1}), p(z_t|x_t)]$
+  - 두 개의 확률 분포를 구해보면, 아래 이미지와 같이 Model을 Linearized하게 만들어줬기 때문에 가우시안 확률 분포로 나오는 것을 알 수 있다.
+  <img src="https://github.com/Kim-SeongGeon/AISL/blob/main/Image/EKF_3.png" width="400"/>
+
+  - EKF를 pseudo code로 살펴보면 아래와 같다.
+  <img src="https://github.com/Kim-SeongGeon/AISL/blob/main/Image/EKF_4.png" width="400"/>
+
+  - 기존의 Kalman Filter와 엄청 유사하지만 $A_t$, $C_t$가 Jacobian matrix $G_t$, $H_t$로 바뀌었다는 것을 주의하자!
+ 
+  - 만약 Observation model(Sensor)가 Noise가 없다면 계산은 어떻게 될까?
+  - Line 4~5를 계산해보면 알겠지만, $μ_t = ({H_t}^T)^{-1} * z_t$이 된다.
+  - 이 말은 현재 들어온 observation vetor만을 이용하여 현재의 mean 값을 update한다는 이야기이다.
+  - 반대로 Observation model(Sensor)가 Noise가 엄청 많다면 계산은 어떻게 될까?
+  - Noise를 나타내는 matrix인 $Q_t$가 무한한 값을 가지게 되고, 그 말은 Kalman Gain 값($K_t$)이 0이라는 이야기이다.
+  - 따라서 이전에 prediction step에서 예측한 mean값이 현재의 mean값으로 update가 된다.
+  - EKF는 다양한 예로 쓰일 수 있는데 Localization을 할 때 다음과 같이 쓰일 수 있다.
+  <img src="https://github.com/Kim-SeongGeon/AISL/blob/main/Image/EKF_5.png" width="400"/>
+
+  - 마지막으로 EKF를 정리하면 다음과 같다.
+    - Kalman Filter의 확장 버전이다.
+    - 1차 테일러 급수식을 활용하여 Non-linear model을 Local Linearization을 시도했다.
+    - Input sensor의 Uncertainty가 커진다면, 선형화 값이 부정확할 수 있다.
 
 ### ✅ 결론
 
