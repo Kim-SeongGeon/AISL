@@ -99,6 +99,13 @@
   - $A_t$는 앞서 정의했던 것과 마찬가지로 따른 Control 및 Noise를 제외한 $[t-1, t]$에서의 state 관계를 나타낸 Matrix이다.
   - $B_t$는 Control Input $u_t$와 state vector와의 관계를 나타내는 Matrix이다.
   - Prediction step에서 현재의 mean값과 covariance matrix 값을 예측하게 된다.
+  - Correction step에서는 Observation 값을 이용하여 Prediction step에서 예측된 mean과 convariance matrix를 update하게 된다.
+  - $K_t$는 Kalman Gain으로 Line 4에서 정의를 하고, $C_t$는 앞서 정의했던 state vector와 observation 값의 관계를 설명하는 matrix이다.
+  - Line 4에서 구한 Kalman Gain 값을 이용하여 Prediction step에서 구했던 mean 값과 covariance matrix 값을 현재의 mean, matrix 값을 구한다.
+  - Line 5에서는 mean 값을 구하게 되는데 현재 알게 된 observation $z_t$와 이전에 구한 mean 및 $C_t$를 이용하여 현재 상태의 mean 값을 update한다.
+  - Line 6에서는 covariance matrix를 업데이트 하는데, observation으로 인해 uncertainty가 줄어드는 방향으로 update를 진행하게 된다.
+
+- EKF란?
 
 ### ✅ 결론
 
