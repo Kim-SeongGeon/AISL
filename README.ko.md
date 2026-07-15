@@ -23,7 +23,7 @@
 
 ### 📝 할 일 (2026-07-15)
 
-- [ ] Kalman Filter 이론 공부
+- [X] Kalman Filter 이론 공부
 - [ ] FAST-LIO 실습 (Parameter 값 변경)
 
 ### 📌 메모
