@@ -148,6 +148,14 @@
     - Kalman Filter의 확장 버전이다.
     - 1차 테일러 급수식을 활용하여 Non-linear model을 Local Linearization을 시도했다.
     - Input sensor의 Uncertainty가 커진다면, 선형화 값이 부정확할 수 있다.
+   
+   
+- FAST-LIO를 실습하면서 실험해볼 것들
+  - LiDAR와 IMU가 FAST-LIO에서 각각 어떤 역할을 하는지
+  - 다운샘플링 크기가 속도와 지도 품질에 주는 영향
+  - rosbag 재생속도가 실시간 처리 한계를 넘는 지점
+  - 시작점으로 돌아왔을 때 발생하는 누적 오차
+  - FAST-LIO에 Loop Closure가 없어서 생기는 drift
 
 ### ✅ 결론
 
