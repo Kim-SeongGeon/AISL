@@ -23,9 +23,84 @@
 
 ### 📝 할 일 (2026-07-15)
 
+- [ ] Kalman Filter 이론 공부
 - [ ] FAST-LIO 실습 (Parameter 값 변경)
 
 ### 📌 메모
+
+- Kalman Filter란?
+  - Kalman Filter(칼만 필터)를 이해하려면 우선 Bayes Filter(베이즈 필터)에 대한 이해가 있어야 한다.
+  - Kalman Filter는 Bayes Filter의 한 종류이고, 모든 분포가 가우시안 확률 분포로 되어있고 모델이 Linear system인 경우 사용할 수 있는 Filter이다. Bayes Filter처럼 Recursive한 Filter로 이전의 예측 값을 현재 예측을 하는데 사용을 하게 된다. Bayes Filter와 마찬가지로 Prediction Step과 Correction Step으로 두 단계로 나누어지게 된다.
+  - Kalman Filter는 trajectory estimation 분야에서 제안된 알고리즘이다. 이를 확장해서 현재는 Control, Navigation 등등 다양한 분야에서 Kalman Filter가 쓰이고 있다.
+  - 예를 들어 Kalman Filter를 이해해보면, 아래의 그림처럼 검은색 점에 배의 현재 위치가 있고, 다음에 어디로 가야할지 예측하는 문제가 있다고 가정해보자.
+  <img src="https://github.com/Kim-SeongGeon/AISL/blob/main/Image/Kalman Filter example_1.png" width="400"/>
+
+  - Prediction을 통해 검은색 (X) 표시가 되어있는 곳으로 갈 것이라 예측했다.
+  <img src="https://github.com/Kim-SeongGeon/AISL/blob/main/Image/Kalman Filter example_2.png" width="400"/>
+
+  - 이때 등대를 통한 Observation을 했고, 그 결과 Correction 과정을 통해 초록색 선까지의 길이를 관찰한 결과 아래 그림과 같이 초록색 (X) 표시가 내가 있는 위치라고 알게 되었다. 이때, Kalman Filter 알고리즘을 활용해서 아래 그림과 같이 초록색 (X) 표시와 검은색 (X) 표시의 Weighted Sum 계산을 통해 위치가 빨간색 (X) 표시로 나타낼 수 있다.
+  <img src="https://github.com/Kim-SeongGeon/AISL/blob/main/Image/Kalman Filter example_3.png" width="400"/>
+
+  - 즉, 한 번 더 정리를 하면 다음과 같다.
+    1. 모든 확률 분포가 가우시안 분포를 가진다.
+    2. 모델이 Linear하다.
+  - 두 가지 가정 조건을 만족할 때 사용하는 Bayes Filter의 한 종류이다.
+  - Bayes Filter와 틀이 비슷핟.
+
+- Kalman Filter 가정 증명 및 설명
+  - 앞서 설명한 거처럼, Kalman Filter를 사용할 때는 두 가지 가정이 따른다.
+    1. 모든 확률 분포가 가우시안 분포를 가진다.
+    2. 모델이 Linear하다.
+ 
+  - Linear model이란 모델이 Linear한 함수를 활용해서 표현이 가능한 모델을 말한다.
+  - 만약 Input이 가우시안 분포를 가진다면, Linear model의 Output도 가우시안 분포를 가지게 된다.
+  <img src="https://github.com/Kim-SeongGeon/AISL/blob/main/Image/Kalman Filter Proof of Assumptions_1.png" width="400"/>
+
+  - 위 이미지의 수식이 Kalman Filter를 방정식으로 풀어 쓴 것이다. 뜻하는 것이 무엇인지 좀 더 자세하게 알아보면,
+  <img src="https://github.com/Kim-SeongGeon/AISL/blob/main/Image/Kalman Filter Proof of Assumptions_2.png" width="400"/>
+
+  - 위 이미지의 수식에서 $n$은 state vector의 차원을 의미한다.
+  - $l$은 control command($u$)의 차원을 의미한다.
+  - Gaussian Distribution을 풀어서 쓰게 되는데 이를 이해하려면 아래와 같은 공식을 알고 있어야 한다.
+  <img src="https://github.com/Kim-SeongGeon/AISL/blob/main/Image/Kalman Filter Proof of Assumptions_3.png" width="400"/>
+
+  - 위 식을 이해하고 Kalman Filter를 방정식으로 만든 것을 대입하면 아래와 같은 두 식을 만들어낼 수 있다.
+  <img src="https://github.com/Kim-SeongGeon/AISL/blob/main/Image/Kalman Filter Proof of Assumptions_4.png" width="400"/>
+
+  - 위 두 이미지에 의해 $[p(x_t|u_t, x_{t-1}), p(z_t|x_t)]$ 이 식이 가우시안 정규 분포를 따른 다는 것을 확인했다.
+  - 그렇다면 $bel$함수는 가우시안 분포를 따를까?
+  - 아래 이미지에서 알 수 있다시피 우리는 $\bar{\mathrm{bel}}$함수가 가우시안 분포를 따른다고 가정했기 때문에 $bel$ 함수도 가우시안 분포를 따른다고 이야기할 수 있다. 가우시안 분포의 곱은 가우시안 분포로 나오기 때문이다.
+  <img src="https://github.com/Kim-SeongGeon/AISL/blob/main/Image/Kalman Filter Proof of Assumptions_5.png" width="400"/>
+
+  - 그렇다면 $\bar{\mathrm{bel}}$함수는 가우시안 분포를 따를까?
+  - 아래 이미지에서 알 수 있다시피 $\bar{\mathrm{bel}}$함수의 정의도 가우시안 분포의 곱으로 정의하기 때문에 가우시안 분포를 따른다고 할 수 있다. 하지만 여기는 초기의 $bel$함수도 가우시안 분포를 따른다는 것을 보여주어야 $\bar{\mathrm{bel}}$함수의 가우시안 분포를 따른다는 것이 성립이 된다.
+  <img src="https://github.com/Kim-SeongGeon/AISL/blob/main/Image/Kalman Filter Proof of Assumptions_6.png" width="400"/>
+
+  - 모든 성분들은 가우시안 분포를 가진다!
+  <img src="https://github.com/Kim-SeongGeon/AISL/blob/main/Image/Kalman Filter Proof of Assumptions_7.png" width="400"/>
+
+  - 가우시안 분포를 표현할 때는 2가지의 parameter가 존재한다.
+  - 바로 평균(mean: $μ$)과 공분산 행렬(covariance matrix: $Σ$)이다.
+  - 따라서 Bayes Filter에서 $bel$함수로 표현했던 부분을 단 두 개의 매개변수 $μ,Σ$로 나타낼 수 있다.
+ 
+  - 정리
+  - 위 모든 내용을 종합하여 Kalman Filter를 증명하는 데 쓰인 특징들은 다음과 같다.
+    - 두 가우시안 확률 분포의 곱은 가우시안 확률 분포이다.
+    - Linear System에서 Input이 가우시안 확률 분포일 경우 Output도 가우시안 확률 분포이다.
+    - 가우시안의 Marginal and conditional distribution도 가우시안 분포이다.
+    - 가우시안 분포를 표현할 땐 평균과 공분산 행렬만 있으면 표현 가능하다.
+    - 역행렬 연산에 대한 성질도 쓰인다.
+ 
+  - 따라서 Kalman Filter의 pseudo code를 써보면 아래와 같다.
+  <img src="https://github.com/Kim-SeongGeon/AISL/blob/main/Image/Kalman Filter Proof of Assumptions_8.png" width="400"/>
+
+  - Input으로는 t-1의 mean 값, t-1의 covariance matrix 값, control command 값 ($u_t$), observation 값($z_t$)이 들어간다.
+  - Line 2, 3에는 Prediction step이고, Line 4~6은 Correction step이다.
+  - $A_t$는 앞서 정의했던 것과 마찬가지로 따른 Control 및 Noise를 제외한 $[t-1, t]$에서의 state 관계를 나타낸 Matrix이다.
+  - $B_t$는 Control Input $u_t$와 state vector와의 관계를 나타내는 Matrix이다.
+  - Prediction step에서 현재의 mean값과 covariance matrix 값을 예측하게 된다.
+
+### ✅ 결론
 
 <p><br></p>
 
