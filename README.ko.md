@@ -45,7 +45,7 @@
     1. 모든 확률 분포가 가우시안 분포를 가진다.
     2. 모델이 Linear하다.
   - 두 가지 가정 조건을 만족할 때 사용하는 Bayes Filter의 한 종류이다.
-  - Bayes Filter와 틀이 비슷핟.
+  - Bayes Filter와 틀이 비슷하다.
 
 - Kalman Filter 가정 증명 및 설명
   - 앞서 설명한 거처럼, Kalman Filter를 사용할 때는 두 가지 가정이 따른다.
