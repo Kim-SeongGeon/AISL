@@ -157,6 +157,17 @@
   - 시작점으로 돌아왔을 때 발생하는 누적 오차
   - FAST-LIO에 Loop Closure가 없어서 생기는 drift
 
+- 실험 1: LiDAR와 IMU의 역할 확인
+  - 실험 1-A: 정상 입력 기준값 측정
+    - 지도 생성: 정상
+    - Odometry 평균 주기: 9.988Hz
+    - RViz Path 이동: 정상
+  - 실험 1-B: LiDAR만 입력
+    - /livox/lidar는 정상 발행됨
+    - FAST-LIO가 IMU 초기화를 완료하지 못함
+    - /Odometry가 발행되지 않음
+    - 누적 지도가 생성되지 않음
+
 ### ✅ 결론
 
 <p><br></p>
