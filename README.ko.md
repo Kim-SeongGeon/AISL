@@ -116,7 +116,7 @@
 
   - Prediction Step : 이전 값의 $bel(x_{t-1})$을 가지고 현재 control command인 $u_t$를 더하여 현재의 상태를 예측하는 단계이다.
   - Correction Step : Prediction Step에서 구한 값과 현재 관찰되는 값 $(z_t)$을 가지고 정교하게 상태값을 계산한다.
-  - 여기서 배운 Bayes Filter는 단지 State estimation을 할 대 사용하는 Framework으로 이해하면 된다.
+  - 여기서 배운 Bayes Filter는 단지 State estimation을 할 때 사용하는 Framework으로 이해하면 된다.
   - Motion model 및 Observation model을 어떻게 정의하느냐, 확률 분포를 어떻게 가정하느냐, Parametric filter인가 Non-parametric filter인가 에 따라 다양하게 확장이 가능하다.
  
 ### ✅ 결론
