@@ -47,6 +47,8 @@
 
 ### 📌 메모
 
+### Kalman Filter 이론
+
 - Kalman Filter란?
   - Kalman Filter(칼만 필터)를 이해하려면 우선 Bayes Filter(베이즈 필터)에 대한 이해가 있어야 한다.
   - Kalman Filter는 Bayes Filter의 한 종류이고, 모든 분포가 가우시안 확률 분포로 되어있고 모델이 Linear system인 경우 사용할 수 있는 Filter이다. Bayes Filter처럼 Recursive한 Filter로 이전의 예측 값을 현재 예측을 하는데 사용을 하게 된다. Bayes Filter와 마찬가지로 Prediction Step과 Correction Step으로 두 단계로 나누어지게 된다.
@@ -167,7 +169,8 @@
     - Kalman Filter의 확장 버전이다.
     - 1차 테일러 급수식을 활용하여 Non-linear model을 Local Linearization을 시도했다.
     - Input sensor의 Uncertainty가 커진다면, 선형화 값이 부정확할 수 있다.
-   
+
+### FAST-LIO 실습
    
 - FAST-LIO를 실습하면서 실험해볼 것들
   - LiDAR와 IMU가 FAST-LIO에서 각각 어떤 역할을 하는지
