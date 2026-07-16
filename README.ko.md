@@ -27,7 +27,37 @@
 
 ### 📌 메모
 
-- 
+### FAST-LIO 실습
+
+- 실험 2: 다운샘플링 크기가 속도와 지도 품질에 미치는 영향
+  - 실험 2-A: 현재 스캔 다운샘플링
+  - 1. 파라미터 의미
+  - filter_size_surf: 새로 들어온 LiDAR 스캔을 voxel 단위로 다운샘플링
+  - filter_size_map: 누적 전역 지도를 다운샘플링
+  - 예를 들어 filter_size_surf: 0.5라면 약 0.5m 크기의 voxel 안에서 대표점을 사용한다.
+
+| 설정 | 예상 결과 |
+|---|---|
+| 0.2 m | 포인트 많음, 세밀함, 계산량 증가 |
+| 0.5 m | 기본 설정 |
+| 1.0 m | 포인트 적음, 빠름, 구조 손실 가능 |
+
+  - 실제 결과
+  - fitler_size_surf = 0.2
+<img src="https://github.com/Kim-SeongGeon/AISL/blob/main/Image/0.2m_rviz.png" width="400"/>
+
+  - fitler_size_surf = 0.5
+<img src="https://github.com/Kim-SeongGeon/AISL/blob/main/Image/0.5m_rviz.png" width="400"/>
+
+  - fitler_size_surf = 1.0
+<img src="https://github.com/Kim-SeongGeon/AISL/blob/main/Image/1.0m_rviz.png" width="400"/>
+
+| filter_size_surf | 평균 포인트 수 | 평균 CPU | 지도 세밀함 | 벽·기둥 형태 | 처리 이상 |
+|---|---|---|---|---|---|
+| 0.2 m | 947.1개 | 62.09% | 높음 | 벽과 기둥 윤곽이 가장 연속적이고 세부 구조가 잘 나타남 | 정상. 다만 점군이 조밀해 일부 영역이 두껍거나 겹쳐 보임 |
+| 0.5 m | 332.3개 | 51.80% | 보통 | 주요 벽면과 기둥 형태를 구분할 수 있으며 윤곽도 비교적 유지됨 | 정상. 정보량과 연산 부하의 균형이 가장 양호함 | 
+| 1.0 m | 122.3개 | 51.40% | 낮음 | 벽과 기둥의 윤곽이 끊기고 작은 구조가 많이 소실됨 | 동작 자체는 정상이나 과도한 다운샘플링으로 구조 정보 손실이 큼 |
+
 
 ### ✅ 결론
 
