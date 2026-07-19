@@ -43,13 +43,13 @@
 | 1.0 m | 포인트 적음, 빠름, 구조 손실 가능 |
 
   - 실제 결과
-    - filter_size_surf = 0.2
+  - filter_size_surf = 0.2
 <img src="https://github.com/Kim-SeongGeon/AISL/blob/main/Image/0.2m_rviz.png" width="400"/>
 
-    - filter_size_surf = 0.5
+  - filter_size_surf = 0.5
 <img src="https://github.com/Kim-SeongGeon/AISL/blob/main/Image/0.5m_rviz.png" width="400"/>
 
-    - filter_size_surf = 1.0
+  - filter_size_surf = 1.0
 <img src="https://github.com/Kim-SeongGeon/AISL/blob/main/Image/1.0m_rviz.png" width="400"/>
 
 | filter_size_surf | 평균 포인트 수 | 평균 CPU | 지도 세밀함 | 벽·기둥 형태 | 처리 이상 |
