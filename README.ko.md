@@ -23,7 +23,7 @@
 
 ### 📝 할 일 (2026-07-16)
 
-- [ ] FAST-LIO 실습 (Parameter 값 변경)
+- [X] FAST-LIO 실습 (Parameter 값 변경)
 
 ### 📌 메모
 
