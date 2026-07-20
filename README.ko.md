@@ -48,22 +48,26 @@
     ```
     rostopic echo -p /Odometry > hku_mb_odom.csv
     ```
+    
 <img src="https://github.com/Kim-SeongGeon/AISL/blob/main/Image/HKU_MB_2020-09-20-13-34-51bag_rviz.png" width="400"/>
 
   3. FAST-LIO 설정
-    - 장시간 데이터를 실행할 때 불필요한 메모리 사용을 줄이기 위해 PCD 저장 기능을 비활성화하였다.
-    ```
-    pcd_save:
-      pcd_save_en: false
-      interval: -1
-    ```
-    - 다운샘플링 파라미터는 기본값을 사용하였다.
-    ```
-    <param name="filter_size_surf" type="double" value="0.5" />
-    <param name="filter_size_map" type="double" value="0.5" />
-    ```
+
+  - 장시간 데이터를 실행할 때 불필요한 메모리 사용을 줄이기 위해 PCD 저장 기능을 비활성화하였다.
+```
+pcd_save:
+  pcd_save_en: false
+  interval: -1
+```
+   - 다운샘플링 파라미터는 기본값을 사용하였다.
+```
+<param name="filter_size_surf" type="double" value="0.5" />
+<param name="filter_size_map" type="double" value="0.5" />
+```
+  
   4. 분석 방법
-    - 첫 번째 Odometry 위치를 시작 위치 $\mathbf{p}_0$, 마지막 위치를 종료 위치 $\mathbf{p}_f$로 정의하였다.    
+
+   - 첫 번째 Odometry 위치를 시작 위치 $\mathbf{p}_0$, 마지막 위치를 종료 위치 $\mathbf{p}_f$로 정의하였다.    
 
 **XY 시작-종료 거리**
   
