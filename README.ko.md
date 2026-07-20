@@ -68,6 +68,22 @@
 | filter_size_surf | 새 LiDAR 스캔 | 한 프레임의 처리 포인트 수 |
 | filter_size_map | ikd-Tree 전역 지도 | 지도 포인트 수와 최근접점 탐색 |
 
+  - 실제 결과
+  - filter_size_map = 0.2
+<img src="https://github.com/Kim-SeongGeon/AISL/blob/main/Image/map02_rviz.png" width="400"/>
+
+  - filter_size_map = 0.5
+<img src="https://github.com/Kim-SeongGeon/AISL/blob/main/Image/map05_rviz.png" width="400"/>
+
+  - filter_size_map = 1.0
+<img src="https://github.com/Kim-SeongGeon/AISL/blob/main/Image/map10_rviz.png" width="400"/>
+
+| filter_size_map | 최종 map_valid | 최종 ikd-Tree 포인트 수 | 평균 CPU | 예상 메모리 | 추정 궤적 | 벽·기둥 정합 | 처리 상태 |
+|---|---:|---:|---:|---|---|---|---|
+| 0.2 m | 35,913 | 38,287 | 80.22% | 높음 | 세밀한 지도 정보를 사용하지만 최종 위치 오차가 일부 남음 | 구조가 가장 조밀하고 연속적이나 일부 표면이 두껍게 중첩됨 | 정상 |
+| 0.5 m | 4,400 | 5,485 | 81.10% | 중간 | 주요 구조를 유지하며 최종 위치가 원점에 가장 가까움 | 벽과 기둥 윤곽이 비교적 안정적으로 유지됨 | 정상, 균형이 가장 양호 |
+| 1.0 m | 1,432 | 1,751 | 75.40% | 낮음 | 정합 정보 부족으로 궤적 오차 증가 가능 | 세부 구조가 감소하고 국부적 정합 안정성이 저하됨 | `No Effective Points!` 반복 발생 |
+
 ### ✅ 결론
 
 - 
