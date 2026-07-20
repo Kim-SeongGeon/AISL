@@ -48,6 +48,8 @@
     ```
     rostopic echo -p /Odometry > hku_mb_odom.csv
     ```
+<img src="https://github.com/Kim-SeongGeon/AISL/blob/main/Image/HKU_MB_2020-09-20-13-34-51bag_rviz.png" width="400"/>
+
   3. FAST-LIO 설정
     - 장시간 데이터를 실행할 때 불필요한 메모리 사용을 줄이기 위해 PCD 저장 기능을 비활성화하였다.
     ```
