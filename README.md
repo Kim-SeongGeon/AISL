@@ -19,6 +19,155 @@
 
 ---
 
+## July 20, 2026
+
+### 📝 To-Do List (2026-07-20)
+
+* [x] Conduct FAST-LIO experiments
+
+### 📌 Notes
+
+### FAST-LIO Practice
+
+* Experiment 4: Measurement of Return-to-Start Error and Data Validity Verification
+
+  1. Experimental Objective
+
+  * Verify the accumulated positional error that occurs when FAST-LIO returns to the starting point after traveling along a long trajectory.
+  * Calculate the difference between the starting and ending positions and analyze the drift ratio relative to the total traveled distance.
+  * However, calculating the return-to-start error requires that the sensor actually return to the same position and orientation as the starting state.
+
+  2. Dataset
+
+  ```
+  HKU_MB_2020-09-20-13-34-51.bag
+  ```
+
+  * A dataset with a longer execution time than the **2020-09-16-quick-shack.bag** used in the previous experiment was selected.
+  * The dataset contains the following topics.
+
+  ```
+  /livox/lidar
+  /livox/imu
+  ```
+
+  * After playing the bag file, the /Odometry topic published by FAST-LIO was saved in CSV format.
+
+  ```
+  rostopic echo -p /Odometry > hku_mb_odom.csv
+  ```
+
+<img src="https://github.com/Kim-SeongGeon/AISL/blob/main/Image/HKU_MB_2020-09-20-13-34-51bag_rviz.png" width="400"/>
+
+3. FAST-LIO Configuration
+
+* To reduce unnecessary memory usage when processing a long-duration dataset, the PCD saving function was disabled.
+
+```
+pcd_save:
+  pcd_save_en: false
+  interval: -1
+```
+
+* The default values were used for the downsampling parameters.
+
+```
+<param name="filter_size_surf" type="double" value="0.5" />
+<param name="filter_size_map" type="double" value="0.5" />
+```
+
+4. Analysis Method
+
+* The first Odometry position was defined as the starting position $\mathbf{p}_0$, and the last position was defined as the ending position $\mathbf{p}_f$.
+
+**XY Start-to-End Distance**
+
+$$ E_{xy} = \sqrt{(x_f - x_0)^2 + (y_f - y_0)^2} $$
+
+**3D Start-to-End Distance**
+
+$$ E_{3D} = \sqrt{(x_f - x_0)^2 + (y_f - y_0)^2 + (z_f - z_0)^2} $$
+
+**Odometry-Based Accumulated Travel Distance**
+
+$$ L = \sum_{i=1}^{N-1} \sqrt{(x_{i+1} - x_i)^2 + (y_{i+1} - y_i)^2 + (z_{i+1} - z_i)^2} $$
+
+If the dataset is confirmed to return to the starting point, the drift ratio can be calculated using the following equation.
+
+$$ D = \frac{E_{3D}}{L} \times 100 $$
+
+However, if the actual trajectory does not return to the starting point, $E_{3D}$ includes both the positional difference caused by the actual motion and the accumulated FAST-LIO error. Therefore, the drift ratio cannot be calculated.
+
+5. CSV Data Verification
+
+| Item                             | Result                |
+| -------------------------------- | --------------------- |
+| Number of Odometry messages      | 2,602 messages        |
+| Recording duration               | 260.10 seconds        |
+| Average publishing frequency     | Approximately 10 Hz   |
+| Maximum inter-frame displacement | Approximately 0.102 m |
+| Abnormal positional jumps        | Not detected          |
+
+* A total of 2,602 Odometry messages were recorded continuously, and no abnormally large positional changes were detected between frames. Therefore, the CSV recording and FAST-LIO processing were considered to have been performed normally.
+
+6. Starting and Ending Positions
+
+| Category          | X(m)     | Y(m)     | Z(m)    |
+| ----------------- | -------- | -------- | ------- |
+| Starting position | -0.0052  | 0.0014   | 0.0122  |
+| Ending position   | 59.2596  | 22.9559  | 2.2246  |
+| Change            | +59.2648 | +22.9545 | +2.2123 |
+
+* The ending position was approximately 63.55 m away from the starting position in the XY plane. In addition, the elevation at the ending point was approximately 2.21 m higher than at the starting point.
+
+7. Position and Travel Distance Analysis
+
+| Metric                         | Measured Value | Interpretation                           |
+| ------------------------------ | -------------- | ---------------------------------------- |
+| Accumulated XY travel distance | 96.1665 m      | Odometry-based estimate                  |
+| Accumulated 3D travel distance | 98.7626 m      | Odometry-based estimate                  |
+| XY start-to-end distance       | 63.5548 m      | Cannot be used as return-to-start error  |
+| 3D start-to-end distance       | 63.5933 m      | Cannot be used as return-to-start error  |
+| Elevation change               | +2.2123 m      | Did not return to the starting elevation |
+
+* The accumulated travel distance is not GT (Ground Truth), but the sum of the distances between consecutive positions estimated by FAST-LIO.
+
+8. Comparison of Starting and Ending Orientations
+
+| Orientation | Start    | End        | Change                 |
+| ----------- | -------- | ---------- | ---------------------- |
+| Roll        | -0.0146° | -14.0471°  | Approximately -14.03°  |
+| Pitch       | 0.0465°  | 2.3240°    | Approximately +2.28°   |
+| Yaw         | -0.0039° | -155.1641° | Approximately -155.16° |
+
+* The total rotational difference between the starting and ending orientations, calculated using quaternions, was as follows.
+
+$$ E_R = 155.0646° $$
+
+* Because the ending orientation differed from the starting orientation by approximately 155°, the sensor did not return to its initial state in either position or orientation.
+
+9. Feasibility of Drift Calculation
+
+* Simply substituting the measured values produces the following result.
+
+$$ \frac{63.5933}{98.7626} \times 100 = 64.3901% $$
+
+* However, this value is not the drift ratio of FAST-LIO.
+* Because the actual sensor did not return to the starting point, the 63.5933 m distance contains the following two components.
+
+$$ Start-to-end distance = Actual trajectory displacement + FAST-LIO accumulated error $$
+
+* Without GT, these two components cannot be separated. Therefore, `64.3901%` was not used as the FAST-LIO drift value.
+
+### ✅ Conclusion
+
+* A total of 2,602 Odometry samples were successfully obtained from HKU_MB_2020-09-20-13-34-51.bag. The Odometry-based accumulated 3D travel distance was 98.7626 m, while the distance between the starting and ending positions was 63.5933 m. The elevation changed by 2.2123 m, and a rotational difference of approximately 155.0646° existed between the starting and ending orientations. These results confirmed that the dataset was not a closed-loop trajectory returning to the original position and orientation. Therefore, the start-to-end distance cannot be interpreted as the accumulated FAST-LIO error or used to calculate the drift ratio. This experiment was not summarized as a return-to-start error measurement, but rather as a preliminary data validation experiment demonstrating that the closed-loop condition of a rosbag must be verified before evaluating accumulated error.
+
+
+<p><br></p>
+
+---
+
 ## July 19, 2026
 
 ### 📝 To-Do List (2026-07-19)
