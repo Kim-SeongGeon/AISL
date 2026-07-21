@@ -19,6 +19,38 @@
 
 ---
 
+## July 19, 2026
+
+### 📝 To-Do List (2026-07-19)
+
+* [x] Conduct FAST-LIO experiments
+
+### 📌 Notes
+
+### FAST-LIO Practice
+
+* Experiment 3: Real-Time Processing Limit of FAST-LIO According to rosbag Playback Speed
+
+  * The rosbag was played at 0.5x, 1x, 2x, 4x, and 8x speeds to determine when FAST-LIO could no longer keep up with the input data in real time.
+  * Since this experiment was intended to evaluate the computational performance of FAST-LIO, RViz visualization and PCD saving were disabled during execution.
+
+| Playback Speed | Actual Processing Time | Number of Odometry Messages | Retention Rate | Average CPU Usage | Maximum RSS              | Post-Completion Delay | Warnings                      |
+| -------------- | ---------------------- | --------------------------- | -------------- | ----------------- | ------------------------ | --------------------- | ----------------------------- |
+| 0.5x           | Approximately 97s      | 487 messages                | 100%           | 30.97%            | 179,469 KiB / 175.25MiB  | Within 0–1s           | ROS warning logs not measured |
+| 1.0x           | Approximately 49s      | 487 messages                | 100%           | 52.43%            | 179,560 KiB / 175.35MiB  | Within 0–1s           | ROS warning logs not measured |
+| 2.0x           | Approximately 25s      | 487 messages                | 100%           | 85.20%            | 178,332 KiB / 174.15MiB  | Within 0–1s           | ROS warning logs not measured |
+| 4.0x           | Approximately 13s      | 487 messages                | 100%           | 104.23%           | 178,716 KiB / 174.53 MiB | Within 0–1s           | ROS warning logs not measured |
+| 8.0x           | Approximately 7s       | 487 messages                | 100%           | 154.71%           | 178,860 KiB / 174.67 MiB | Within 0–1s           | ROS warning logs not measured |
+
+### ✅ Conclusion
+
+* As the rosbag playback speed increased from 0.5x to 8x, the average CPU usage increased from 30.97% to 154.71%. In contrast, the maximum RSS remained nearly constant at approximately 174–175 MiB. Under all conditions, 487 Odometry messages were generated, and the overall pose estimation results were identical. In addition, no noticeable processing delay was observed after the bag playback ended. Therefore, under the current hardware and configuration, FAST-LIO is considered capable of real-time processing for input rates up to 8x playback speed, corresponding to approximately 80 Hz. However, because no processing failure occurred even at 8x playback speed, the actual processing limit of FAST-LIO is higher than the range evaluated in this experiment. Additional experiments at 16x playback speed or higher are required to determine the precise processing limit.
+
+
+<p><br></p>
+
+---
+
 ## July 16, 2026
 
 ### 📝 To-Do List (2026-07-16)
