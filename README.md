@@ -21,17 +21,250 @@
 
 ## July 15, 2026
 
-### 📝 To-Do (2026-07-15)
+### 📝 To-Do List (2026-07-15)
 
-- [ ] FAST-LIO Practice (Parameter Value Modification)
+* [x] Study Kalman Filter theory
+* [x] Conduct FAST-LIO experiments
 
 ### 📌 Notes
 
-- (To be updated)
+### Kalman Filter Theory
+
+* What is a Kalman Filter?
+
+  * To understand the Kalman Filter, it is first necessary to understand the Bayes Filter.
+
+  * The Kalman Filter is a type of Bayes Filter that can be used when all distributions are Gaussian probability distributions and the model is a linear system. Like the Bayes Filter, it is a recursive filter that uses the previous estimate to calculate the current estimate. As with the Bayes Filter, it is divided into two stages: the Prediction Step and the Correction Step.
+
+  * The Kalman Filter was originally proposed as an algorithm for trajectory estimation. It has since been extended and is now used in various fields, including control and navigation.
+
+  * For example, to understand the Kalman Filter, suppose that a ship is currently located at the black point shown in the figure below, and the objective is to estimate where it will move next.
+
+    <img src="https://github.com/Kim-SeongGeon/AISL/blob/main/Image/Kalman Filter example_1.png" width="400"/>
+
+  * Through the Prediction process, it is estimated that the ship will move to the location marked with the black (X).
+
+    <img src="https://github.com/Kim-SeongGeon/AISL/blob/main/Image/Kalman Filter example_2.png" width="400"/>
+
+  * At this point, an observation is performed using the lighthouse. As a result of the Correction process, the distance represented by the green line is observed, and the ship determines that its position is the location marked with the green (X), as shown below. The Kalman Filter algorithm can then calculate the weighted sum of the green (X) and black (X), resulting in the estimated position marked with the red (X).
+
+    <img src="https://github.com/Kim-SeongGeon/AISL/blob/main/Image/Kalman Filter example_3.png" width="400"/>
+
+  * In summary, the assumptions are as follows.
+
+    1. All probability distributions are Gaussian distributions.
+    2. The model is linear.
+
+  * The Kalman Filter is a type of Bayes Filter that is used when these two assumptions are satisfied.
+
+  * Its overall framework is similar to that of the Bayes Filter.
+
+* Proof and Explanation of the Kalman Filter Assumptions
+
+  * As explained earlier, the Kalman Filter is based on two assumptions.
+
+    1. All probability distributions are Gaussian distributions.
+    2. The model is linear.
+
+  * A linear model is a model that can be represented using linear functions.
+
+  * If the input follows a Gaussian distribution, the output of a linear model also follows a Gaussian distribution.
+
+    <img src="https://github.com/Kim-SeongGeon/AISL/blob/main/Image/Kalman Filter Proof of Assumptions_1.png" width="400"/>
+
+  * The equations in the image above represent the Kalman Filter in mathematical form. To examine their meanings in greater detail,
+
+    <img src="https://github.com/Kim-SeongGeon/AISL/blob/main/Image/Kalman Filter Proof of Assumptions_2.png" width="400"/>
+
+  * In the equations shown above, $n$ represents the dimension of the state vector.
+
+  * $l$ represents the dimension of the control command ($u$).
+
+  * The Gaussian distribution is expanded mathematically, and the following formula must be understood to interpret it.
+
+    <img src="https://github.com/Kim-SeongGeon/AISL/blob/main/Image/Kalman Filter Proof of Assumptions_3.png" width="400"/>
+
+  * By understanding the equation above and substituting the Kalman Filter equations into it, the following two equations can be obtained.
+
+    <img src="https://github.com/Kim-SeongGeon/AISL/blob/main/Image/Kalman Filter Proof of Assumptions_4.png" width="400"/>
+
+  * Based on the two images above, it is confirmed that $[p(x_t|u_t, x_{t-1}), p(z_t|x_t)]$ follows a Gaussian distribution.
+
+  * Then, does the $bel$ function also follow a Gaussian distribution?
+
+  * As shown in the image below, because we assume that the $\bar{\mathrm{bel}}$ function follows a Gaussian distribution, the $bel$ function can also be said to follow a Gaussian distribution. This is because the product of Gaussian distributions is also a Gaussian distribution.
+
+    <img src="https://github.com/Kim-SeongGeon/AISL/blob/main/Image/Kalman Filter Proof of Assumptions_5.png" width="400"/>
+
+  * Then, does the $\bar{\mathrm{bel}}$ function follow a Gaussian distribution?
+
+  * As shown in the image below, the $\bar{\mathrm{bel}}$ function is also defined as the product of Gaussian distributions, so it can be said to follow a Gaussian distribution. However, for this statement to hold, it must first be demonstrated that the initial $bel$ function also follows a Gaussian distribution.
+
+    <img src="https://github.com/Kim-SeongGeon/AISL/blob/main/Image/Kalman Filter Proof of Assumptions_6.png" width="400"/>
+
+  * All components follow Gaussian distributions!
+
+    <img src="https://github.com/Kim-SeongGeon/AISL/blob/main/Image/Kalman Filter Proof of Assumptions_7.png" width="400"/>
+
+  * A Gaussian distribution is represented by two parameters.
+
+  * These parameters are the mean ($μ$) and the covariance matrix ($Σ$).
+
+  * Therefore, the part represented by the $bel$ function in the Bayes Filter can be expressed using only two parameters: $μ,Σ$.
+
+  * Summary
+
+  * Based on all the information above, the properties used to derive the Kalman Filter are as follows.
+
+    * The product of two Gaussian probability distributions is also a Gaussian probability distribution.
+    * In a linear system, if the input follows a Gaussian probability distribution, the output also follows a Gaussian probability distribution.
+    * The marginal and conditional distributions of a Gaussian distribution are also Gaussian distributions.
+    * A Gaussian distribution can be fully represented using only its mean and covariance matrix.
+    * Properties related to inverse matrix operations are also used.
+
+  * Therefore, the pseudocode of the Kalman Filter can be written as follows.
+
+    <img src="https://github.com/Kim-SeongGeon/AISL/blob/main/Image/Kalman Filter Proof of Assumptions_8.png" width="400"/>
+
+  * The inputs are the mean at time t-1, the covariance matrix at time t-1, the control command ($u_t$), and the observation ($z_t$).
+
+  * Lines 2 and 3 represent the Prediction Step, while Lines 4 through 6 represent the Correction Step.
+
+  * As defined earlier, $A_t$ is a matrix that represents the relationship between the states at $[t-1, t]$, excluding control and noise.
+
+  * $B_t$ is a matrix that represents the relationship between the control input $u_t$ and the state vector.
+
+  * In the Prediction Step, the current mean and covariance matrix are predicted.
+
+  * In the Correction Step, the observation is used to update the mean and covariance matrix predicted in the Prediction Step.
+
+  * $K_t$ is the Kalman Gain, which is defined in Line 4, and $C_t$ is the matrix that represents the relationship between the state vector and the observation, as defined earlier.
+
+  * The Kalman Gain calculated in Line 4 is used to update the mean and covariance matrix obtained in the Prediction Step to the current mean and covariance matrix.
+
+  * Line 5 calculates the mean. The current observation $z_t$, the previously calculated mean, and $C_t$ are used to update the mean of the current state.
+
+  * Line 6 updates the covariance matrix in a direction that reduces uncertainty based on the observation.
+
+* What is an EKF?
+
+  * The Kalman Filter is used when the model is linear and all probability distributions are Gaussian probability distributions. Therefore, if these assumptions are violated, the Kalman Filter does not operate properly.
+
+  * However, real-world systems frequently fail to satisfy these assumptions. For example, even when considering localization on a 2D plane, an orientation value must be added to the state vector. Because sine and cosine values are introduced, the model becomes nonlinear.
+
+  * Therefore, the EKF extends the Kalman Filter so that it can also be used in nonlinear situations.
+
+  * EKF stands for Extended Kalman Filter.
+
+  * As its name suggests, the EKF is an extended version of the Kalman Filter. Although the model is defined as nonlinear, the overall algorithmic flow is similar to that of the Kalman Filter.
+
+  * First, a nonlinear model can be defined as shown in the image below.
+
+    <img src="https://github.com/Kim-SeongGeon/AISL/blob/main/Image/EKF_1.png" width="400"/>
+
+  * The problem with these nonlinear functions is that when an input with a Gaussian probability distribution is passed through the model, the resulting output does not follow a Gaussian probability distribution.
+
+  * To resolve this problem, a process called Local Linearization is performed.
+
+  * Linearization is performed using a first-order Taylor expansion.
+
+  * Like the Kalman Filter, the EKF consists of a Prediction Step and a Correction Step. The values required for these steps are defined as shown in the image below. Jacobian matrices are also used.
+
+    <img src="https://github.com/Kim-SeongGeon/AISL/blob/main/Image/EKF_2.png" width="400"/>
+
+  * Two main factors affect Local Linearization.
+
+    * The difference between the value linearized using the first-order Taylor expansion and the actual nonlinear model
+    * Input uncertainty (= Covariance Matrix)
+
+  * When the input uncertainty is small, the standard deviation is also small. Therefore, the probability distribution becomes narrow, reducing the difference between the model linearized using the Taylor expansion and the actual nonlinear model.
+
+  * Examining the EKF equations in greater detail,
+
+  * As with the Kalman Filter,
+
+  * $[p(x_t|u_t, x_{t-1}), p(z_t|x_t)]$
+
+  * When these two probability distributions are calculated, it can be seen that they result in Gaussian probability distributions because the model has been linearized, as shown in the image below.
+
+    <img src="https://github.com/Kim-SeongGeon/AISL/blob/main/Image/EKF_3.png" width="400"/>
+
+  * The pseudocode of the EKF is shown below.
+
+    <img src="https://github.com/Kim-SeongGeon/AISL/blob/main/Image/EKF_4.png" width="400"/>
+
+  * It is very similar to the original Kalman Filter, but note that $A_t$ and $C_t$ have been replaced by the Jacobian matrices $G_t$ and $H_t$!
+
+  * What happens if the observation model (sensor) has no noise?
+
+  * As can be determined by calculating Lines 4 and 5, $μ_t = ({H_t}^T)^{-1} * z_t$.
+
+  * This means that the current mean is updated using only the current observation vector.
+
+  * Conversely, what happens if the observation model (sensor) contains an extremely large amount of noise?
+
+  * The matrix $Q_t$, which represents noise, approaches infinity. This means that the Kalman Gain ($K_t$) becomes 0.
+
+  * Therefore, the mean predicted in the previous Prediction Step is used as the current updated mean.
+
+  * The EKF can be applied in various situations. For example, it can be used for localization as follows.
+
+    <img src="https://github.com/Kim-SeongGeon/AISL/blob/main/Image/EKF_5.png" width="400"/>
+
+  * Finally, the EKF can be summarized as follows.
+
+    * It is an extended version of the Kalman Filter.
+    * It performs Local Linearization of nonlinear models using a first-order Taylor expansion.
+    * If the uncertainty of the input sensor increases, the linearized values may become inaccurate.
+
+### FAST-LIO Practice
+
+* Experiments to conduct while practicing FAST-LIO
+
+  * The respective roles of LiDAR and IMU in FAST-LIO
+  * The effect of downsampling size on processing speed and map quality
+  * The rosbag playback speed at which the real-time processing limit is exceeded
+  * The accumulated error that occurs when returning to the starting point
+  * Drift caused by the absence of Loop Closure in FAST-LIO
+
+* Experiment 1: Identifying the Roles of LiDAR and IMU
+
+  * Experiment 1-A: Measuring the Baseline with Normal Inputs
+
+    * FAST-LIO initialized normally
+    * Average Odometry publishing frequency: 9.988 Hz
+    * Average Odometry period: approximately 100.1 ms
+    * The Path and accumulated map were generated normally in RViz
+  * Experiment 1-B: LiDAR Input Only
+
+    * The /livox/lidar topic was published normally
+    * FAST-LIO initialization failed because IMU data was unavailable
+    * /Odometry was not published
+    * Accumulated map generation failed because the system could not estimate orientation or displacement
+  * Experiment 1-C: IMU Input Only
+
+    * The /livox/imu topic was published normally
+    * Average IMU publishing frequency: approximately 202.913 Hz
+    * Average IMU publishing period: approximately 4.93 ms
+    * Initial IMU measurements were received, but the geometric structure of the surrounding environment could not be observed
+    * Position correction and map generation were impossible because no LiDAR feature points were available
+    * /Odometry and the accumulated map were not generated
+
+  ### Functional Comparison by Input Condition
+
+| Input Condition | Orientation and Motion Change Estimation | Point Cloud Motion Distortion Compensation | LiDAR Map Registration                      | Normal Map/Odometry |
+| --------------- | ---------------------------------------- | ------------------------------------------ | ------------------------------------------- | ------------------- |
+| LiDAR + IMU     | Possible                                 | Possible                                   | Possible                                    | Possible            |
+| LiDAR Only      | Impossible                               | Impossible                                 | Cannot proceed because initialization fails | Impossible          |
+| IMU Only        | Inertial measurements can be received    | No point cloud available for compensation  | Impossible                                  | Impossible          |
 
 ### ✅ Conclusion
 
-- (To be updated)
+* The **IMU** measures acceleration and angular velocity at a high frequency to estimate the robot's orientation and motion changes and compensate for motion distortion in the LiDAR point cloud.
+* The **LiDAR** provides geometric features of the surrounding environment to correct positional errors and perform map registration.
+* When only LiDAR data is provided, IMU-based initialization and point cloud motion distortion compensation are impossible. When only IMU data is provided, no environmental information is available for position correction, so a map and Odometry cannot be generated.
+* Therefore, **both LiDAR and IMU are required** for normal localization and map generation in FAST-LIO.
+
 
 <p><br></p>
 
