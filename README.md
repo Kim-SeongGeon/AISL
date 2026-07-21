@@ -19,6 +19,89 @@
 
 ---
 
+## July 16, 2026
+
+### 📝 To-Do List (2026-07-16)
+
+* [x] Conduct FAST-LIO experiments
+
+### 📌 Notes
+
+### FAST-LIO Practice
+
+* Experiment 2: Effect of Downsampling Size on Processing Speed and Map Quality
+
+  * Experiment 2-A: Current Scan Downsampling
+  * 1. Parameter Definitions
+  * filter_size_surf: Downsamples newly received LiDAR scans on a voxel basis
+  * filter_size_map: Downsamples the accumulated global map
+  * For example, if filter_size_surf is set to 0.5, a representative point is used within each voxel of approximately 0.5 m in size.
+
+| Setting | Expected Result                                                       |
+| ------- | --------------------------------------------------------------------- |
+| 0.2 m   | More points, higher detail, increased computational load              |
+| 0.5 m   | Default setting                                                       |
+| 1.0 m   | Fewer points, faster processing, possible structural information loss |
+
+* Actual Results
+
+* filter_size_surf = 0.2
+
+  <img src="https://github.com/Kim-SeongGeon/AISL/blob/main/Image/0.2m_rviz.png" width="400"/>
+
+* filter_size_surf = 0.5
+
+  <img src="https://github.com/Kim-SeongGeon/AISL/blob/main/Image/0.5m_rviz.png" width="400"/>
+
+* filter_size_surf = 1.0
+
+  <img src="https://github.com/Kim-SeongGeon/AISL/blob/main/Image/1.0m_rviz.png" width="400"/>
+
+| filter_size_surf | Average Number of Points | Average CPU Usage | Map Detail | Wall and Column Shapes                                                                                          | Processing Issues                                                                                                                                                                                     |
+| ---------------- | ------------------------ | ----------------- | ---------- | --------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| 0.2 m            | 947.1 points             | 62.09%            | High       | The outlines of walls and columns were the most continuous, and detailed structures were clearly represented    | Normal. Some wall surfaces appeared thick or overlapped, but this may have been caused by the accumulated display of dense point clouds or minor registration errors, so further analysis is required |
+| 0.5 m            | 332.3 points             | 51.80%            | Medium     | Major wall surfaces and column shapes could be distinguished, and their outlines were relatively well preserved | Normal. The balance between information quantity and computational load was the best                                                                                                                  |
+| 1.0 m            | 122.3 points             | 51.40%            | Low        | The outlines of walls and columns became discontinuous, and many small structures were lost                     | The system operated normally, but excessive downsampling caused significant structural information loss                                                                                               |
+
+* Experiment 2-B: Global Map Downsampling
+
+  * Difference from Experiment 2-A
+
+| Parameter        | Applied Target      | Directly Affected Value                          |
+| ---------------- | ------------------- | ------------------------------------------------ |
+| filter_size_surf | New LiDAR scan      | Number of processed points per frame             |
+| filter_size_map  | ikd-Tree global map | Number of map points and nearest-neighbor search |
+
+* Actual Results
+
+* filter_size_map = 0.2
+
+  <img src="https://github.com/Kim-SeongGeon/AISL/blob/main/Image/map02_rviz.png" width="400"/>
+
+* filter_size_map = 0.5
+
+  <img src="https://github.com/Kim-SeongGeon/AISL/blob/main/Image/map05_rviz.png" width="400"/>
+
+* filter_size_map = 1.0
+
+  <img src="https://github.com/Kim-SeongGeon/AISL/blob/main/Image/map10_rviz.png" width="400"/>
+
+| filter_size_map | Final map_valid | Final Number of ikd-Tree Points | Average CPU Usage | Estimated Trajectory                                                                                           | Wall and Column Registration                                                                         | Processing Status                             |
+| --------------- | --------------- | ------------------------------- | ----------------- | -------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------- | --------------------------------------------- |
+| 0.2 m           | 35,913          | 38,287                          | 80.22%            | Trajectory estimation was normal, but a difference existed between the baseline setting and the final position | The structures were the densest and most continuous, but some surfaces appeared thick and overlapped | Normal                                        |
+| 0.5 m           | 4,400           | 5,485                           | 81.10%            | Stable trajectory estimation and structural registration were maintained                                       | The outlines of walls and columns were maintained relatively stably                                  | Normal, with the best overall balance         |
+| 1.0 m           | 1,432           | 1,751                           | 75.40%            | Registration stability decreased along with warnings about insufficient valid points                           | Detailed structures were reduced, and local registration stability decreased                         | Repeated occurrence of `No Effective Points!` |
+
+### ✅ Conclusion
+
+* As **filter_size_surf** increased, the average number of output points decreased significantly from 947.1 to 122.3. CPU usage was the highest at 0.2 m, but there was almost no difference between 0.5 m and 1.0 m. Therefore, in this dataset and computing environment, increasing the voxel size beyond 0.5 m provided only a limited additional reduction in CPU usage, while the loss of map structure increased.
+* When **filter_size_map** was increased from 0.2 m to 1.0 m, the final number of ikd-Tree points decreased by approximately 95.4%, from 38,287 to 1,751. However, CPU usage did not decrease in proportion to the number of map points, and the values at 0.2 m and 0.5 m were nearly identical. The 0.2 m setting preserved more detailed structures but significantly increased the map size, while the 1.0 m setting caused detailed structural information loss and repeated `No Effective Points!` warnings, reducing registration stability. In this experimental environment, 0.5 m provided the best balance between map size and registration stability.
+
+
+<p><br></p>
+
+---
+
 ## July 15, 2026
 
 ### 📝 To-Do List (2026-07-15)
