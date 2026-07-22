@@ -19,6 +19,47 @@
 
 ---
 
+## July 21, 2026
+
+### 📝 To-Do List (2026-07-21)
+
+* [x] Complete FAST-LIO practice
+
+### 📌 Notes
+
+* Based on the results obtained from the FAST-LIO practice conducted so far, the following points were confirmed.
+
+  * Both LiDAR and IMU are required for FAST-LIO to initialize and operate normally
+  * The relationship among the number of processed points, CPU usage, and map detail according to changes in filter_size_surf
+  * The relationship between ikd-Tree size and registration stability according to changes in filter_size_map
+  * Real-time processing without message loss at up to 8x playback speed, corresponding to approximately 80 Hz input
+  * The need to verify the closed-loop condition and GT (Ground Truth) before evaluating return-to-start error
+  * The limitation that FAST-LIO is an Odometry system that does not include Loop Closure
+* **Overall Conclusion of FAST-LIO Practice**
+
+  * In this practice, FAST-LIO was built in an Ubuntu 20.04 and ROS Noetic environment, and LiDAR-Inertial Odometry and 3D map generation were verified using a publicly available Livox Avia rosbag. Rather than simply executing the system, changes according to sensor input conditions, current scan downsampling, global map downsampling, and rosbag playback speed were compared.
+  * Normal initialization and Odometry estimation were possible only when both LiDAR and IMU data were provided. Through this, the roles of the IMU in state prediction and motion compensation and the LiDAR in scan-to-map correction were confirmed. As filter_size_surf increased, the number of points processed in each frame decreased, but excessive downsampling caused the loss of detailed structures such as walls and columns.
+  * As filter_size_map increased, the number of ikd-Tree points decreased. However, CPU usage did not decrease in proportion to the number of map points, and at 1.0 m, `No Effective Points!` warnings and reduced registration stability were observed. In this environment, the default value of 0.5 m provided the best balance between map size and structural preservation.
+  * In the rosbag playback speed experiment, 487 Odometry messages and identical pose estimation results were generated under all conditions from 0.5x to 8x playback speed. CPU usage increased, but memory usage remained constant at approximately 174–175 MiB, and no noticeable post-completion delay occurred. Therefore, under the experimental environment, FAST-LIO was considered capable of processing LiDAR input at a rate of at least approximately 80 Hz.
+  * Long-duration data were analyzed to measure return-to-start error, but the dataset could not be used for drift evaluation because the ending position and orientation did not return to the starting state. This confirmed that accumulated error should not be determined solely from the start-to-end distance of Odometry and that a closed-loop trajectory or Ground Truth must be available beforehand.
+  * FAST-LIO is a computationally efficient LiDAR-Inertial Odometry system, but it does not include place recognition or Pose Graph Optimization. Therefore, to globally correct accumulated errors generated during long-distance travel, FAST-LIO must be combined with Scan Context, Loop Closure, or a separate SLAM backend.
+
+### ✅ Conclusion
+
+* Through this practice, the following points were learned.
+
+  * Parameters cannot be interpreted using the simple relationship that smaller values are always more precise and larger values are always faster.
+  * A reduction in the number of map points does not necessarily lead to a reduction in overall CPU usage.
+  * An environment-specific trade-off is required between computational efficiency and map quality.
+  * Real-time performance should not be evaluated solely based on the number of output messages.
+  * Drift evaluation requires either a closed-loop condition or Ground Truth.
+  * The strength of FAST-LIO is fast local Odometry, while global consistency correction is a separate problem.
+
+
+<p><br></p>
+
+---
+
 ## July 20, 2026
 
 ### 📝 To-Do List (2026-07-20)
