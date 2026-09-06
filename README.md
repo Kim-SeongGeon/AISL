@@ -1,5 +1,11 @@
 # AISL's journey
 
+## Master's individual research
+
+[Reproduction, experiment configurations, and evaluation scripts](./research/object_loop_closure/) · [Learning, papers, research decisions, and lab meetings (Notion)](https://app.notion.com/p/388c388e8d7181259571f054730a8512)
+
+Added 2026-09-06. The research folder contains preparation materials and a tested offline metric utility; no SlideSLAM reproduction or new-descriptor benchmark is claimed. Existing study records remain below.
+
 [![KR](https://img.shields.io/badge/README-한국어-blue)](./README.ko.md)
 [![EN](https://img.shields.io/badge/README-English-red)](./README.md)
 

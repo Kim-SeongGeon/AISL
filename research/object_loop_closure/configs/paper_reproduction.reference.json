@@ -1,0 +1,44 @@
+{
+  "schema_version": 1,
+  "status": "literature_reference_not_executed",
+  "source": "https://natanaso.github.io/ref/Liu_SlideSLAM_TRO25.pdf",
+  "section": "V-K1",
+  "dataset": "SemanticKITTI",
+  "experiment_type": "inter_robot_map_matching",
+  "semantic_source": "ground_truth_segmentation",
+  "initial_pose_source": "SuMa++",
+  "reported_intervals": {
+    "05": [
+      [
+        0,
+        1000
+      ],
+      [
+        700,
+        2000
+      ],
+      [
+        1600,
+        2760
+      ]
+    ],
+    "07": [
+      [
+        0,
+        600
+      ],
+      [
+        400,
+        1000
+      ],
+      [
+        500,
+        1100
+      ]
+    ]
+  },
+  "interval_endpoint_convention": "Verify against official playback code; numbers transcribed from paper, not executable slicing.",
+  "upstream_commit": null,
+  "processed_bag_checksums": null,
+  "note": "Do not reuse overlapping inter-robot intervals as validation/test splits. Single-robot causal retrieval protocol must be defined separately."
+}

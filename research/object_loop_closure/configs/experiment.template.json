@@ -1,0 +1,62 @@
+{
+  "schema_version": 1,
+  "status": "draft_not_executed",
+  "experiment_id": null,
+  "protocol_id": null,
+  "method": {
+    "name": null,
+    "stage": null,
+    "upstream_commit": null,
+    "descriptor_dimension": null
+  },
+  "input": {
+    "dataset": null,
+    "sequence": null,
+    "query_unit": null,
+    "local_map_extent": null,
+    "observation_window": null,
+    "object_map_schema": null,
+    "segmentation_source": null,
+    "odometry_source": null,
+    "only_past_observations": true
+  },
+  "split": {
+    "validation": null,
+    "test": null,
+    "query_manifest": null,
+    "database_manifest": null
+  },
+  "ground_truth": {
+    "source": null,
+    "positive_distance_m": null,
+    "negative_distance_m": null,
+    "minimum_time_separation_s": null,
+    "overlap_rule": null,
+    "ignore_region_rule": null
+  },
+  "retrieval": {
+    "ks": [
+      1,
+      5,
+      10
+    ],
+    "score_direction": "higher_is_better",
+    "tie_break_rule": null,
+    "detection_threshold": null
+  },
+  "runtime": {
+    "hardware": null,
+    "threads": null,
+    "warmup_queries": null,
+    "repetitions": null,
+    "random_seeds": [],
+    "report": [
+      "median_ms",
+      "p95_ms",
+      "descriptor_bytes",
+      "index_bytes",
+      "verification_data_bytes"
+    ]
+  },
+  "note": "null values are unresolved; this is not a ROS launch config or a completed run."
+}

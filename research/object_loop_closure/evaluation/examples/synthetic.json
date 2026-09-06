@@ -1,0 +1,11 @@
+{
+  "schema_version": 1,
+  "protocol_id": "synthetic-unit-test-v1",
+  "synthetic": true,
+  "queries": [
+    {"query_id":"q1","eligible_ids":["a","b"],"positive_ids":["a"],"candidates":[{"id":"a","score":0.9},{"id":"b","score":0.8}]},
+    {"query_id":"q2","eligible_ids":["a","b"],"positive_ids":["b"],"candidates":[{"id":"a","score":0.9},{"id":"b","score":0.8}]},
+    {"query_id":"q3","eligible_ids":["a"],"positive_ids":[],"candidates":[{"id":"a","score":0.7}]},
+    {"query_id":"q4","eligible_ids":["b"],"positive_ids":[],"candidates":[{"id":"b","score":0.2}]}
+  ]
+}

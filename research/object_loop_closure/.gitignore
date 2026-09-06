@@ -1,0 +1,12 @@
+__pycache__/
+*.pyc
+.venv/
+third_party/
+data/
+results/local/
+*.bag
+*.db3
+*.mcap
+*.pcd
+*.pt
+*.pth

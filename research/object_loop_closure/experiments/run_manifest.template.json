@@ -1,0 +1,45 @@
+{
+  "schema_version": 1,
+  "experiment_id": null,
+  "status": "not_run",
+  "synthetic": false,
+  "started_at": null,
+  "ended_at": null,
+  "code": {
+    "repository": "https://github.com/Kim-SeongGeon/AISL",
+    "commit": null,
+    "dirty": null,
+    "upstream_commit": null
+  },
+  "environment": {
+    "os": null,
+    "ros": null,
+    "cpu": null,
+    "gpu": null,
+    "ram_gb": null,
+    "python": null,
+    "compiler": null,
+    "image_digest": null
+  },
+  "command": null,
+  "working_directory": null,
+  "config_path": null,
+  "config_sha256": null,
+  "data": {
+    "source": null,
+    "manifest_path": null,
+    "sha256": null
+  },
+  "random_seed": null,
+  "exit_code": null,
+  "processed_queries": null,
+  "failed_queries": null,
+  "artifacts": {
+    "stdout": null,
+    "stderr": null,
+    "predictions": null,
+    "metrics": null
+  },
+  "notion_record_url": null,
+  "notes": "Fill after actual execution. Synthetic test success is not baseline reproduction."
+}

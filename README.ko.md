@@ -1,5 +1,11 @@
 # AISL의 여정
 
+## 석사 개인 연구
+
+[재현·실험 설정·평가 스크립트](./research/object_loop_closure/) · [학습·논문·연구 판단·랩미팅 기록 (Notion)](https://app.notion.com/p/388c388e8d7181259571f054730a8512)
+
+2026-09-06 정리: 연구 폴더에는 준비 자료와 테스트한 offline 평가 도구가 있습니다. SlideSLAM 재현이나 신규 descriptor 성능 검증 완료를 뜻하지 않습니다. 기존 학습·실습 기록은 아래에 보존했습니다.
+
 [![KR](https://img.shields.io/badge/README-한국어-blue)](./README.ko.md)
 [![EN](https://img.shields.io/badge/README-English-red)](./README.md)
 
