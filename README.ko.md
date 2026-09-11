@@ -93,7 +93,7 @@ $$
 
 **6. 실행 결과**
 
-아래는 **각 조건의 첫 시행(seed=42)** 결과이다. 30회 평균 결과가 아니며, 전체 210회 원자료는 로컬 CSV에 저장하였다.
+아래는 **각 조건의 첫 시행(seed=42)** 결과이다. 30회 평균 결과가 아니며, 전체 210회 원자료는 아래 링크의 CSV에 저장하였다.
 
 | 조건 | 후보 수 | 후보 안의 정답 수 | Precision | Recall | Oracle 위치 오차(m) | Oracle yaw 오차(°) |
 |---|---:|---:|---:|---:|---:|---:|
@@ -114,7 +114,16 @@ $$
 
 **7. 작성한 로컬 파일과 실행 방법**
 
-실험 자료는 로컬 프로젝트의 `virtual_map/` 폴더에 작성하였다. 이 기록 추가는 코드·결과 파일의 GitHub 업로드를 의미하지 않는다.
+실험 코드와 결과 파일을 [virtual_map 실험 폴더](./research/object_loop_closure/virtual_map/)에 업로드하였다.
+
+- [Python 코드](./research/object_loop_closure/virtual_map/experiment.py)
+- [실행 설명](./research/object_loop_closure/virtual_map/README.md)
+- [전체 210회 결과 CSV](./research/object_loop_closure/virtual_map/results/metrics.csv)
+- [기본 지도 그림](./research/object_loop_closure/virtual_map/results/clean/maps.svg)
+- [추가 객체 5개 그림](./research/object_loop_closure/virtual_map/results/extra_5/maps.svg)
+- [위치 잡음 0.20 m 그림](./research/object_loop_closure/virtual_map/results/noise_020/maps.svg)
+
+아래 실행 예의 `virtual_map/`은 로컬 작업 폴더 기준이며, 저장소에서는 `research/object_loop_closure/virtual_map/`에 해당한다.
 
 | 파일 | 역할 |
 |---|---|
