@@ -68,3 +68,15 @@ Mac/Linux에서는 `python3 experiment.py`를 사용하세요.
 ![기본 지도와 oracle 정렬](results/clean/maps.svg)
 
 실행 스크립트는 사용자별 제공 Python 경로를 자동 탐색하고, 없으면 py 또는 python을 사용합니다.
+
+## Consistency graph 실습 (일지 2026-09-12)
+
+[상세 결과](RESULTS_MACOS.md) · [코드](consistency_graph.py) · [9조합 CSV](results_graph_macos_20260911/metrics.csv) · [그래프와 실행 기록](results_graph_macos_20260911/)
+
+실제 실행일은 2026-09-11, GitHub 정리일은 2026-09-14입니다. seed=42 단일 시행의 학습용 거리 그래프이며 실제 CLIPPER나 최종 대응 선택 결과가 아닙니다. 기존 지도 생성 코드를 재사용하며 정답은 채점·시각화에만 씁니다.
+
+이 폴더에서 준비된 Python 3로 실행합니다. 새로운 output 이름을 지정하세요.
+
+```sh
+python3 -B consistency_graph.py --seed 42 --output results_graph_new
+```

@@ -1,0 +1,10 @@
+﻿condition,seed,extra_objects,noise_std_m,epsilon_m,candidate_count,correct_candidates,edge_count,true_true_edges,true_true_possible,true_false_edges,false_false_edges
+clean,42,0,0,0.05,34,10,61,45,45,4,12
+clean,42,0,0,0.2,34,10,73,45,45,12,16
+clean,42,0,0,0.5,34,10,111,45,45,32,34
+extra_5,42,5,0,0.05,51,10,62,45,45,5,12
+extra_5,42,5,0,0.2,51,10,96,45,45,21,30
+extra_5,42,5,0,0.5,51,10,168,45,45,48,75
+noise_020,42,0,0.2,0.05,34,10,18,10,45,3,5
+noise_020,42,0,0.2,0.2,34,10,48,27,45,11,10
+noise_020,42,0,0.2,0.5,34,10,100,38,45,27,35

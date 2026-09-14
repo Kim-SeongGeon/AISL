@@ -23,6 +23,110 @@
 
 ---
 
+## 2026년 9월 12일
+
+### 📝 할 일 (2026-09-12)
+
+- [X] 9월 11일 가상 실험을 macOS에서 재현하고 기존 210행 결과와 비교
+- [X] 후보 간 거리 일관성을 검사하는 학습용 consistency graph 구현
+- [X] 3조건 × 허용오차 3개, 총 9조합의 그래프 생성·채점·시각화
+- [X] 코드, JSON/SVG, CSV, 실행 설정과 검증 기록 정리
+- [ ] 실제 SlideGraph·CLIPPER 연결 및 최종 대응 선택·자동 정합 평가
+
+### 📌 메모
+
+#### Consistency graph 실험
+
+**1. 목적과 이전 실험과의 연결**
+
+9월 11일의 class all-to-all 후보를 그대로 사용하여, 두 후보가 객체 간 거리 관계를 함께 만족하는지 확인하였음. 노드는 객체 자체가 아니라 대응 가설 (A의 i ↔ B의 j)임. 이번 단계는 후보의 연결 관계를 관찰하는 학습용 이진 그래프이며 실제 CLIPPER 구현이 아님.
+
+> 일지 분류일은 사용자 지정 2026-09-12임. 원본 실험은 2026-09-11에 실행되었고, GitHub 정리는 2026-09-14에 수행하였음. 원본 폴더명과 manifest의 실행 시각은 보존함.
+
+**2. 입력과 edge 판정**
+
+- 기존 experiment.py의 지도 생성과 class 기반 후보 함수를 재사용함.
+- A → B: 회전 30°, 이동 (10,5)m. A는 깨끗하고 B에만 추가 객체 또는 좌표 잡음을 적용함.
+- 후보 (i,j), (k,l)이 같은 A 객체 또는 같은 B 객체를 중복 사용하면 연결하지 않음.
+- 나머지는 두 지도에서 객체 간 거리 차이의 절댓값이 epsilon 이하일 때 무방향 edge를 생성함.
+- 정답 ID는 edge 판정에 전달하지 않음. 생성이 끝난 그래프의 채점·색상에만 사용함.
+- 후보를 최종 선택하거나 제거하지 않으므로 후보 수 자체는 변하지 않음.
+
+**3. 실험 조건과 환경**
+
+macOS 26.6.2 arm64, Python 3.12.14, 표준 라이브러리만 사용. seed=42 단일 시행이며 평균 결과가 아님.
+
+| 조건 | 추가 객체 | B 좌표 잡음 표준편차 | 후보 수 | epsilon |
+|---|---:|---:|---:|---|
+| clean | 0 | 0 m | 34 | 0.05 / 0.20 / 0.50 m |
+| extra_5 | 5 | 0 m | 51 | 0.05 / 0.20 / 0.50 m |
+| noise_020 | 0 | 0.20 m | 34 | 0.05 / 0.20 / 0.50 m |
+
+정답 후보는 모두 10개이며 정답끼리 가능한 무순서 연결은 10×9/2=45개임. 잡음 표준편차와 거리 차이 허용오차는 서로 다른 설정임.
+
+**4. 실행 결과**
+
+| 조건 | epsilon(m) | 정답–정답 /45 | 정답–오답 | 오답–오답 |
+|---|---:|---:|---:|---:|
+| clean | 0.05 | 45 | 4 | 12 |
+| clean | 0.20 | 45 | 12 | 16 |
+| clean | 0.50 | 45 | 32 | 34 |
+| extra_5 | 0.05 | 45 | 5 | 12 |
+| extra_5 | 0.20 | 45 | 21 | 30 |
+| extra_5 | 0.50 | 45 | 48 | 75 |
+| noise_020 | 0.05 | 10 | 3 | 5 |
+| noise_020 | 0.20 | 27 | 11 | 10 |
+| noise_020 | 0.50 | 38 | 27 | 35 |
+
+- 무잡음에서는 정답–정답 연결 45개가 모두 유지되었음.
+- noise_020에서 epsilon 증가에 따라 정답 연결이 10 → 27 → 38개로 회복되었음.
+- 동시에 오답이 포함된 연결도 8 → 21 → 62개로 늘었음.
+- 무잡음에서도 오답끼리의 연결이 존재하므로 연결 수만으로 정답을 확정할 수 없음.
+
+**5. 검증**
+
+- 기본 210회 재현: 후보 수·정답 후보 수·precision·recall 모두 기존 결과와 일치.
+- oracle 오차 최대 차이: 이동 3.6603e-15 m, yaw 1.2723e-14°. 수치 비교 허용오차 1e-12 통과.
+- 무잡음 정답 edge 45개, epsilon 증가에 따른 edge 포함 관계, 자기 연결·중복 edge·객체 중복 사용 차단 검사 통과.
+- 독립적인 3-4-5 삼각형과 epsilon 경계·잘못된 epsilon 검사 통과.
+- JSON 및 SVG XML 파싱 확인. 실제 SVG 렌더링 배치는 별도 시각 검수하지 않았음.
+- oracle 검증은 자동 매칭 성공률이 아니며 시간·메모리·정합 성공률은 미측정임.
+
+**6. 코드와 결과**
+
+- [그래프 코드](./research/object_loop_closure/virtual_map/consistency_graph.py)
+- [검증 코드](./research/object_loop_closure/virtual_map/verify_macos.py)
+- [상세 결과 설명](./research/object_loop_closure/virtual_map/RESULTS_MACOS.md)
+- [9조합 CSV](./research/object_loop_closure/virtual_map/results_graph_macos_20260911/metrics.csv)
+- [실행 환경·설정·코드 SHA256](./research/object_loop_closure/virtual_map/results_graph_macos_20260911/manifest.json)
+- [전체 그래프 JSON·SVG](./research/object_loop_closure/virtual_map/results_graph_macos_20260911/)
+- [macOS 재현 CSV](./research/object_loop_closure/virtual_map/results_recheck_macos/metrics.csv)
+- [재현 및 독립 예제 검증 기록](./research/object_loop_closure/virtual_map/results_recheck_macos/verification.json)
+
+초록색은 정답 후보, 회색은 오답 후보임. 숫자는 후보 인덱스이며 실제 A/B 대응은 같은 폴더의 graph.json에서 확인함.
+
+![noise_020, epsilon 0.05m](./research/object_loop_closure/virtual_map/results_graph_macos_20260911/noise_020_eps_0.05/graph.svg)
+![noise_020, epsilon 0.50m](./research/object_loop_closure/virtual_map/results_graph_macos_20260911/noise_020_eps_0.50/graph.svg)
+
+Python 3가 준비된 환경에서 저장소 루트 기준으로 실행함. 새 output을 지정해야 하며 기존 폴더 재사용은 오류로 중단함.
+
+```sh
+python3 -B research/object_loop_closure/virtual_map/consistency_graph.py --seed 42 --output research/object_loop_closure/virtual_map/results_graph_new
+```
+
+macOS 검증 당시 기본 python3 대신 Codex 제공 Python 3.12.14 절대 경로를 사용했으며 manifest에 기록했음. 다른 컴퓨터에서는 해당 컴퓨터의 Python 경로를 사용함. 이번 업로드에서는 기존 결과를 재실행해 덮어쓰지 않음.
+
+### ✅ 결론
+
+- 거리 일관성 그래프를 생성·채점·시각화하는 실습을 완료하였음.
+- 허용오차를 키우면 정답 연결과 오답 연결이 함께 증가하는 절충을 확인하였음.
+- 새 descriptor의 성능 개선이나 실제 SlideGraph·CLIPPER 및 loop closure 성공을 입증한 결과는 아님.
+- 다음은 그래프를 해석한 뒤 실제 CLIPPER의 입출력·지원 환경을 확인하는 단계임. 현재 소규모 실습은 맥북으로 진행하고 실제 데이터·ROS/SLAM·대규모 실험은 데스크탑 환경 확인 후 진행함.
+
+<p><br></p>
+
+---
+
 ## 2026년 9월 11일
 
 ### 📝 할 일 (2026-09-11)

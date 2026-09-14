@@ -1,0 +1,33 @@
+{
+  "created_at": "2026-09-11T08:39:26.645981+00:00",
+  "python": "3.12.14 (main, Aug 25 2026, 13:50:33) [Clang 22.1.3 ]",
+  "executable": "/Users/kxgeon/.cache/codex-runtimes/codex-primary-runtime/dependencies/python/bin/python3",
+  "platform": "macOS-26.6.2-arm64-arm-64bit",
+  "architecture": "arm64",
+  "argv": [
+    "virtual_map/consistency_graph.py",
+    "--seed",
+    "42",
+    "--output",
+    "virtual_map/results_graph_macos_20260911"
+  ],
+  "cwd": "/Volumes/Untitled/02_Master/Personal Master Study",
+  "seed": 42,
+  "trials_per_case": 1,
+  "units": "m; internal angles rad",
+  "direction": "A_to_B",
+  "source": "Notion 26.09.11 consistency graph learning plan",
+  "source_url": "https://app.notion.com/p/388c388e8d7181259571f054730a8512",
+  "git_commit": null,
+  "code_sha256": {
+    "consistency_graph.py": "5e38cb96fe3692e5143e4c5c760b5479aedc6fcb9ca7395beef83ff73f009a60",
+    "experiment.py": "dd5c7181449f54c31a18cf0d87ddb3b2d69dced7034e0b711d57b01cd49cad3c"
+  },
+  "checks": [
+    "epsilon monotonicity",
+    "unique edges",
+    "no self edges or shared objects",
+    "45 true-true edges for noise-free cases"
+  ],
+  "limitations": "Single seed; educational binary graph, not CLIPPER; no selection or pose estimation"
+}

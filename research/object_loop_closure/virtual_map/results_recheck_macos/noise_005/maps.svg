@@ -1,0 +1,76 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="430" viewBox="0 0 1200 430">
+<rect width="1200" height="430" fill="white"/>
+<text x="30" y="25" font-family="sans-serif" font-size="15">A: past map</text>
+<circle cx="132.69" cy="337.93" r="4" fill="#15803d" stroke="#15803d" stroke-width="2"/>
+<text x="139.69" y="330.93" font-family="sans-serif" font-size="11">A0</text>
+<circle cx="80.20" cy="309.38" r="4" fill="#2563eb" stroke="#2563eb" stroke-width="2"/>
+<text x="87.20" y="302.38" font-family="sans-serif" font-size="11">A1</text>
+<circle cx="146.67" cy="244.06" r="4" fill="#c2410c" stroke="#c2410c" stroke-width="2"/>
+<text x="153.67" y="237.06" font-family="sans-serif" font-size="11">A2</text>
+<circle cx="169.10" cy="329.01" r="4" fill="#15803d" stroke="#15803d" stroke-width="2"/>
+<text x="176.10" y="322.01" font-family="sans-serif" font-size="11">A3</text>
+<circle cx="101.36" cy="337.24" r="4" fill="#2563eb" stroke="#2563eb" stroke-width="2"/>
+<text x="108.36" y="330.24" font-family="sans-serif" font-size="11">A4</text>
+<circle cx="72.08" cy="268.74" r="4" fill="#c2410c" stroke="#c2410c" stroke-width="2"/>
+<text x="79.08" y="261.74" font-family="sans-serif" font-size="11">A5</text>
+<circle cx="44.40" cy="312.89" r="4" fill="#15803d" stroke="#15803d" stroke-width="2"/>
+<text x="51.40" y="305.89" font-family="sans-serif" font-size="11">A6</text>
+<circle cx="134.20" cy="263.03" r="4" fill="#2563eb" stroke="#2563eb" stroke-width="2"/>
+<text x="141.20" y="256.03" font-family="sans-serif" font-size="11">A7</text>
+<circle cx="72.34" cy="256.65" r="4" fill="#c2410c" stroke="#c2410c" stroke-width="2"/>
+<text x="79.34" y="249.65" font-family="sans-serif" font-size="11">A8</text>
+<circle cx="157.18" cy="340.60" r="4" fill="#15803d" stroke="#15803d" stroke-width="2"/>
+<text x="164.18" y="333.60" font-family="sans-serif" font-size="11">A9</text>
+<text x="430" y="25" font-family="sans-serif" font-size="15">B: current map</text>
+<circle cx="731.41" cy="237.48" r="4" fill="#15803d" stroke="#15803d" stroke-width="2"/>
+<text x="738.41" y="230.48" font-family="sans-serif" font-size="11">B0</text>
+<circle cx="708.64" cy="247.74" r="4" fill="#15803d" stroke="#15803d" stroke-width="2"/>
+<text x="715.64" y="240.74" font-family="sans-serif" font-size="11">B1</text>
+<circle cx="681.34" cy="262.57" r="4" fill="#2563eb" stroke="#2563eb" stroke-width="2"/>
+<text x="688.34" y="255.57" font-family="sans-serif" font-size="11">B2</text>
+<circle cx="648.30" cy="247.86" r="4" fill="#2563eb" stroke="#2563eb" stroke-width="2"/>
+<text x="655.30" y="240.86" font-family="sans-serif" font-size="11">B3</text>
+<circle cx="615.83" cy="207.36" r="4" fill="#c2410c" stroke="#c2410c" stroke-width="2"/>
+<text x="622.83" y="200.36" font-family="sans-serif" font-size="11">B4</text>
+<circle cx="671.45" cy="180.45" r="4" fill="#2563eb" stroke="#2563eb" stroke-width="2"/>
+<text x="678.45" y="173.45" font-family="sans-serif" font-size="11">B5</text>
+<circle cx="674.05" cy="158.58" r="4" fill="#c2410c" stroke="#c2410c" stroke-width="2"/>
+<text x="681.05" y="151.58" font-family="sans-serif" font-size="11">B6</text>
+<circle cx="735.60" cy="220.59" r="4" fill="#15803d" stroke="#15803d" stroke-width="2"/>
+<text x="742.60" y="213.59" font-family="sans-serif" font-size="11">B7</text>
+<circle cx="617.39" cy="269.59" r="4" fill="#15803d" stroke="#15803d" stroke-width="2"/>
+<text x="624.39" y="262.59" font-family="sans-serif" font-size="11">B8</text>
+<circle cx="621.58" cy="218.17" r="4" fill="#c2410c" stroke="#c2410c" stroke-width="2"/>
+<text x="628.58" y="211.17" font-family="sans-serif" font-size="11">B9</text>
+<text x="830" y="25" font-family="sans-serif" font-size="15">Oracle alignment (NOT matched result)</text>
+<circle cx="1131.41" cy="237.48" r="4" fill="#15803d" stroke="#15803d" stroke-width="2"/>
+<text x="1138.41" y="230.48" font-family="sans-serif" font-size="11">B0</text>
+<circle cx="1108.64" cy="247.74" r="4" fill="#15803d" stroke="#15803d" stroke-width="2"/>
+<text x="1115.64" y="240.74" font-family="sans-serif" font-size="11">B1</text>
+<circle cx="1081.34" cy="262.57" r="4" fill="#2563eb" stroke="#2563eb" stroke-width="2"/>
+<text x="1088.34" y="255.57" font-family="sans-serif" font-size="11">B2</text>
+<circle cx="1048.30" cy="247.86" r="4" fill="#2563eb" stroke="#2563eb" stroke-width="2"/>
+<text x="1055.30" y="240.86" font-family="sans-serif" font-size="11">B3</text>
+<circle cx="1015.83" cy="207.36" r="4" fill="#c2410c" stroke="#c2410c" stroke-width="2"/>
+<text x="1022.83" y="200.36" font-family="sans-serif" font-size="11">B4</text>
+<circle cx="1071.45" cy="180.45" r="4" fill="#2563eb" stroke="#2563eb" stroke-width="2"/>
+<text x="1078.45" y="173.45" font-family="sans-serif" font-size="11">B5</text>
+<circle cx="1074.05" cy="158.58" r="4" fill="#c2410c" stroke="#c2410c" stroke-width="2"/>
+<text x="1081.05" y="151.58" font-family="sans-serif" font-size="11">B6</text>
+<circle cx="1135.60" cy="220.59" r="4" fill="#15803d" stroke="#15803d" stroke-width="2"/>
+<text x="1142.60" y="213.59" font-family="sans-serif" font-size="11">B7</text>
+<circle cx="1017.39" cy="269.59" r="4" fill="#15803d" stroke="#15803d" stroke-width="2"/>
+<text x="1024.39" y="262.59" font-family="sans-serif" font-size="11">B8</text>
+<circle cx="1021.58" cy="218.17" r="4" fill="#c2410c" stroke="#c2410c" stroke-width="2"/>
+<text x="1028.58" y="211.17" font-family="sans-serif" font-size="11">B9</text>
+<circle cx="1108.28" cy="247.15" r="8" fill="none" stroke="#15803d" stroke-width="2"/>
+<circle cx="1048.55" cy="248.59" r="8" fill="none" stroke="#2563eb" stroke-width="2"/>
+<circle cx="1073.57" cy="158.81" r="8" fill="none" stroke="#c2410c" stroke-width="2"/>
+<circle cx="1135.39" cy="221.26" r="8" fill="none" stroke="#15803d" stroke-width="2"/>
+<circle cx="1080.78" cy="262.18" r="8" fill="none" stroke="#2563eb" stroke-width="2"/>
+<circle cx="1021.23" cy="217.41" r="8" fill="none" stroke="#c2410c" stroke-width="2"/>
+<circle cx="1019.27" cy="269.48" r="8" fill="none" stroke="#15803d" stroke-width="2"/>
+<circle cx="1072.23" cy="181.49" r="8" fill="none" stroke="#2563eb" stroke-width="2"/>
+<circle cx="1015.43" cy="206.81" r="8" fill="none" stroke="#c2410c" stroke-width="2"/>
+<circle cx="1130.84" cy="237.24" r="8" fill="none" stroke="#15803d" stroke-width="2"/>
+<text x="30" y="395" font-family="sans-serif" font-size="14">Green: tree | Blue: pole | Orange: car | Ring: transformed A | Same scale, coordinates in meters</text></svg>

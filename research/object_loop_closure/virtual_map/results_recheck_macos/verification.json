@@ -1,0 +1,48 @@
+{
+  "status": "PASS",
+  "python": "3.12.14 (main, Aug 25 2026, 13:50:33) [Clang 22.1.3 ]",
+  "platform": "macOS-26.6.2-arm64-arm-64bit",
+  "executable": "/Users/kxgeon/.cache/codex-runtimes/codex-primary-runtime/dependencies/python/bin/python3",
+  "rows": 210,
+  "seeds": [
+    42,
+    71
+  ],
+  "numeric_tolerance": 1e-12,
+  "max_absolute_differences": {
+    "seed": 0,
+    "extra_objects": 0,
+    "noise_std_m": 0,
+    "candidate_count": 0,
+    "correct_candidates": 0,
+    "candidate_precision": 0,
+    "candidate_recall": 0,
+    "oracle_translation_error_m": 3.660266534311063e-15,
+    "oracle_yaw_error_deg": 1.2722461972813903e-14
+  },
+  "code_sha256": "dd5c7181449f54c31a18cf0d87ddb3b2d69dced7034e0b711d57b01cd49cad3c",
+  "baseline_command": [
+    "/Users/kxgeon/.cache/codex-runtimes/codex-primary-runtime/dependencies/python/bin/python3",
+    "-B",
+    "virtual_map/experiment.py",
+    "--seed",
+    "42",
+    "--trials",
+    "30",
+    "--output",
+    "virtual_map/results_recheck_macos"
+  ],
+  "graph_checks": "3-4-5 triangle, shared indices, inclusive threshold, invalid epsilon, scoring does not mutate edges, JSON/SVG parse",
+  "byte_equal_files": [
+    "clean/maps.json",
+    "clean/maps.svg",
+    "extra_10/maps.svg",
+    "extra_2/maps.svg",
+    "extra_5/maps.json",
+    "extra_5/maps.svg",
+    "noise_005/maps.svg",
+    "noise_010/maps.svg",
+    "noise_020/maps.svg"
+  ],
+  "note": "Numerical reproducibility, not automatic registration success; SVG layout not visually checked here"
+}
