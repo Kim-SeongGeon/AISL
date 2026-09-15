@@ -1,0 +1,37 @@
+{
+  "created_at": "2026-09-14T09:54:44.735050+00:00",
+  "python": "3.12.14 (main, Aug 25 2026, 13:50:33) [Clang 22.1.3 ]",
+  "platform": "macOS-26.6.2-arm64-arm-64bit",
+  "argv": [
+    "virtual_map/clipper_experiment.py",
+    "--output",
+    "virtual_map/results_clipper_macos_20260914"
+  ],
+  "clipper_commit": "e514dc29c273837ffdfeebbefbdcb2a93d970969",
+  "eigen_commit": "3147391d946bb4b6c68edd901f2add6ac1f31f8c",
+  "clipper_version": "0.2.4",
+  "solver": "official CLIPPER::solve; default Params, DSD_HEU rounding; uniform ones u0, rescale_u0=true",
+  "kernel": "delta < epsilon then exp(-0.5*delta^2/sigma^2); affinityeps=1e-4; mindist=0",
+  "kernel_sigma_m": 0.2,
+  "seed": 42,
+  "trials_per_case": 1,
+  "direction": "A_to_B",
+  "position_unit": "m",
+  "angle_output": "deg",
+  "build": "Apple clang 21.0.0; C++14 -O2; serial; no OpenMP/PMC/SCS/BLAS/MKL/Python bindings",
+  "hashes": {
+    "virtual_map/clipper_driver.cpp": "f83a66eabdd16978210b25f9bb3046a442b36a1ceb791d080e01280f6f864351",
+    "virtual_map/clipper_experiment.py": "4c9d5583f1e2bf0923d864465675c0a144972329fdc63d72277bedbf0ce49176",
+    "virtual_map/build_clipper.sh": "842d194633cb605b287fce956fcd432cfe003128082150de840263173ed70a24",
+    "virtual_map/experiment.py": "dd5c7181449f54c31a18cf0d87ddb3b2d69dced7034e0b711d57b01cd49cad3c",
+    "build/clipper/clipper_driver": "fa5bd2a57d3a7ea93840e50dec44b1aad3ecc25bb2b93866773accd9d921f5f9"
+  },
+  "checks": [
+    "independent permuted 3-4-5 triangle",
+    "repeatability",
+    "selection subset and one-to-one",
+    "selected pairwise consistency",
+    "noise-free 10/10 and pose <1e-9"
+  ],
+  "limitations": "single map seed and one initial vector; no timing benchmark or success-rate threshold; not SlideGraph or SLAM"
+}

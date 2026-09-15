@@ -1,0 +1,65 @@
+{
+  "selected_pairs": [
+    [
+      7,
+      5
+    ],
+    [
+      2,
+      6
+    ],
+    [
+      0,
+      1
+    ],
+    [
+      8,
+      4
+    ],
+    [
+      5,
+      9
+    ],
+    [
+      9,
+      0
+    ],
+    [
+      3,
+      7
+    ],
+    [
+      4,
+      2
+    ],
+    [
+      1,
+      3
+    ],
+    [
+      6,
+      8
+    ]
+  ],
+  "estimate_A_to_B": [
+    0.5235987755982987,
+    10.0,
+    5.0
+  ],
+  "metrics": {
+    "condition": "clean",
+    "seed": 42,
+    "epsilon_m": 0.5,
+    "kernel_sigma_m": 0.2,
+    "candidates": 34,
+    "selected": 10,
+    "correct": 10,
+    "precision": 1.0,
+    "recall": 1.0,
+    "pose_status": "estimated",
+    "translation_error_m": 0.0,
+    "yaw_error_deg": 6.3611093629270335e-15
+  },
+  "input_source": "virtual_map/results_graph_macos_20260911/clean_eps_0.50/graph.json",
+  "input_sha256": "64df0580c3d70501339b8193a6c8049eb4e38426ca36b9cc408adfd209e0ae28"
+}

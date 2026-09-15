@@ -23,6 +23,111 @@
 
 ---
 
+## 2026년 9월 14일
+
+### 📝 할 일 (2026-09-14)
+
+- [X] 공식 CLIPPER C++ 소스와 고정 버전 Eigen 확보
+- [X] macOS arm64에서 빌드하고 기존 class all-to-all 후보 연결
+- [X] CLIPPER가 선택한 대응으로 회전·이동 추정 및 정답과 비교
+- [X] 3조건 × 허용오차 3개, 총 9조합의 입력·선택 결과·지표·실행 출처 저장
+- [ ] 설정 고정 후 여러 지도 seed에서 반복 평가
+- [ ] 실제 SlideGraph 후보 생성부 및 실제 센서 지도 연결
+
+### 📌 메모
+
+#### 실제 CLIPPER 첫 연결 실험
+
+실험일은 2026-09-14이며, 이 GitHub 정리는 2026-09-15에 수행하였음.
+
+**1. 이전 실험과의 연결**
+
+9월 11일에는 class all-to-all 후보 생성과 정답 대응을 이용한 oracle 변환을 확인했고, 9월 12일 일지에서는 학습용 이진 consistency graph를 정리하였음. 이번에는 실제 CLIPPER로 대응을 선택하고 그 선택 결과로 상대 변환을 계산하였음.
+
+지도 A·B → 같은 class의 후보 → 공식 CLIPPER 가중치 계산 및 solve → 대응 선택 → 선택된 대응으로 2D least-squares 변환 → 정답과 비교.
+
+정답 ID는 solver에 전달하지 않음. solver_input.txt에는 위치·후보 인덱스·epsilon·kernel sigma만 들어감. 정답은 선택 완료 뒤 채점에만 사용함. 이번 변환은 oracle이 아닌 자동 선택 결과이며 후보 생성은 여전히 SlideGraph가 아닌 class all-to-all임.
+
+**2. 구현과 환경**
+
+- macOS 26.6.2 arm64, Apple clang 21.0.0, Python 3.12.14.
+- 공식 [CLIPPER v0.2.4 소스](https://github.com/mit-acl/clipper/tree/e514dc29c273837ffdfeebbefbdcb2a93d970969): commit e514dc29c273837ffdfeebbefbdcb2a93d970969.
+- Eigen 3.4.0: commit 3147391d946bb4b6c68edd901f2add6ac1f31f8c.
+- upstream 알고리즘 소스를 변경하지 않고 별도 C++ 입출력 어댑터로 scorePairwiseConsistency → solve → getSelectedAssociations를 호출함.
+- 공식 CMake의 Intel 전용 옵션 및 OpenMP 연결을 그대로 사용하지 않고 C++14 -O2 serial 빌드를 구성함. Python bindings·PMC·SCS·MKL·BLAS는 미사용. 성능 벤치마크용 빌드는 아님.
+
+**3. 설정**
+
+- seed=42 단일 지도 시행. clean/extra_5/noise_020 × epsilon={0.05,0.20,0.50}m.
+- clean/noise_020 후보 34개, extra_5 후보 51개. 정답 대응은 각 10개.
+- A→B 회전 30°, 이동 (10,5)m. 잡음은 B 좌표에만 적용함.
+- kernel sigma=0.20m를 모든 조합에 고정. 좌표 잡음 표준편차와 다른 설정이며 최적값으로 튜닝한 것은 아님.
+- 거리 차이 delta < epsilon일 때 exp(-0.5×delta²/sigma²)를 계산하고 affinityeps=1e-4 초과 가중치를 사용함. 교육용 그래프의 delta <= epsilon 및 이진 edge와 구분함.
+- 기본 Params와 DSD_HEU rounding, mindist=0. 초기 벡터는 모든 원소 1이며 rescale_u0=true. 정답과 무관한 고정 초기값으로 재현성을 확인함.
+
+**4. 실행 결과**
+
+아래는 seed=42 단일 시행 결과이며 평균·loop closure 성공률이 아님. 선택 precision은 9조합 모두 100%였음.
+
+| 조건 | epsilon(m) | 후보→선택 | 정답 선택 | 대응 recall | 이동 오차(m) | yaw 오차(°) |
+|---|---:|---:|---:|---:|---:|---:|
+| clean | 0.05 | 34→10 | 10 | 100% | 0 | <1e-9 |
+| clean | 0.20 | 34→10 | 10 | 100% | 0 | <1e-9 |
+| clean | 0.50 | 34→10 | 10 | 100% | 0 | <1e-9 |
+| extra_5 | 0.05 | 51→10 | 10 | 100% | 0 | <1e-9 |
+| extra_5 | 0.20 | 51→10 | 10 | 100% | 0 | <1e-9 |
+| extra_5 | 0.50 | 51→10 | 10 | 100% | 0 | <1e-9 |
+| noise_020 | 0.05 | 34→4 | 4 | 40% | 0.274436 | 0.539733 |
+| noise_020 | 0.20 | 34→5 | 5 | 50% | 0.285119 | 0.310655 |
+| noise_020 | 0.50 | 34→6 | 6 | 60% | 0.249264 | 1.096126 |
+
+잡음 조건에서도 선택된 오답은 없었지만 정답 일부를 놓쳤음. 남은 정답만으로 변환을 계산할 수 있었으며, 대응 수가 늘어도 회전 오차가 반드시 줄지는 않았음.
+
+**5. 선택 결과 해석 — 9월 15일 사후 확인**
+
+noise_020에서 epsilon=0.05일 때 A4↔B2, A9↔B0, A8↔B4, A5↔B9가 선택되었음. 0.20에서 A0↔B1, 0.50에서 A3↔B7이 추가되었음. 이 포함 관계는 이번 결과에서 관찰한 것이며 일반 보장은 아님.
+
+정답 대응이라는 것은 같은 실제 물체를 연결했다는 뜻이지 좌표 잡음이 없다는 뜻은 아님. 선택된 물체의 배치와 잡음 방향이 함께 회전 추정에 영향을 주므로 선택 개수와 변환 오차를 별도로 평가해야 함.
+
+**6. 검증과 한계**
+
+- 독립적인 순서가 섞인 3-4-5 삼각형에서 정답 3쌍 선택 확인.
+- 동일 입력 재호출 결과 일치, 후보 부분집합·일대일 대응·선택 집합 pairwise consistency 검사 통과.
+- 무잡음 정답 10개 선택 및 이동·회전 오차 <1e-9 검사 통과.
+- 업로드 전 코드·입력 SHA256과 9조합 저장 대응·변환 재계산 대조 통과. 기존 결과를 덮어쓰지 않았음.
+- 공식 전체 테스트 스위트는 미실행. 여러 지도 seed·초기값 평가, 단계별 시간·메모리 및 정합 성공률은 미평가.
+- 실제 SlideGraph·SLAM 재현이나 새 descriptor 개선을 입증한 결과는 아님.
+
+**7. 코드와 결과**
+
+- [C++ 어댑터](./research/object_loop_closure/virtual_map/clipper_driver.cpp)
+- [Python 실행·평가 코드](./research/object_loop_closure/virtual_map/clipper_experiment.py)
+- [빌드 스크립트](./research/object_loop_closure/virtual_map/build_clipper.sh)
+- [상세 결과와 재현 방법](./research/object_loop_closure/virtual_map/RESULTS_CLIPPER.md)
+- [전체 9조합 CSV](./research/object_loop_closure/virtual_map/results_clipper_macos_20260914/metrics.csv)
+- [환경·버전·설정·해시 manifest](./research/object_loop_closure/virtual_map/results_clipper_macos_20260914/manifest.json)
+- [각 조건 solver 입력 및 선택·변환 JSON](./research/object_loop_closure/virtual_map/results_clipper_macos_20260914/)
+
+AISL checkout에서는 research/object_loop_closure를 작업 루트로 사용함. 의존성 확보 방법은 상세 문서에 기록했음.
+
+```sh
+cd research/object_loop_closure
+sh virtual_map/build_clipper.sh
+python3 -B virtual_map/clipper_experiment.py --output virtual_map/results_clipper_new
+```
+
+준비된 Python 3를 사용하고, macOS 검증 버전은 3.12.14임. 기존 output 재사용은 거부함. 바이너리와 third_party checkout 전체는 업로드하지 않고 고정 commit과 재빌드 방법을 제공함.
+
+### ✅ 결론
+
+- 공식 CLIPPER의 대응 선택부터 선택된 대응에 의한 상대 변환 계산까지 첫 연결을 완료하였음.
+- 현재 소규모 실험은 맥북에서 진행 가능함.
+- 다음은 설정을 고정하고 여러 지도 seed에서 대응 품질과 변환 오차를 함께 평가하는 것임. 실제 센서 데이터·ROS/SLAM·대규모 실험은 데스크탑 환경 확인 후 진행함.
+
+<p><br></p>
+
+---
+
 ## 2026년 9월 12일
 
 ### 📝 할 일 (2026-09-12)

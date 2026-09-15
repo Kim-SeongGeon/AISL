@@ -1,0 +1,41 @@
+{
+  "selected_pairs": [
+    [
+      4,
+      2
+    ],
+    [
+      9,
+      0
+    ],
+    [
+      8,
+      4
+    ],
+    [
+      5,
+      9
+    ]
+  ],
+  "estimate_A_to_B": [
+    0.533018892369896,
+    10.121521297301843,
+    4.753935311891669
+  ],
+  "metrics": {
+    "condition": "noise_020",
+    "seed": 42,
+    "epsilon_m": 0.05,
+    "kernel_sigma_m": 0.2,
+    "candidates": 34,
+    "selected": 4,
+    "correct": 4,
+    "precision": 1.0,
+    "recall": 0.4,
+    "pose_status": "estimated",
+    "translation_error_m": 0.2744362520363756,
+    "yaw_error_deg": 0.5397329335329194
+  },
+  "input_source": "virtual_map/results_graph_macos_20260911/noise_020_eps_0.05/graph.json",
+  "input_sha256": "37e8549c7c2b2ab56f1e59374d53be0d83ed30d021b9aebbae74d8d2ecac3419"
+}

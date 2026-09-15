@@ -80,3 +80,9 @@ Mac/Linux에서는 `python3 experiment.py`를 사용하세요.
 ```sh
 python3 -B consistency_graph.py --seed 42 --output results_graph_new
 ```
+
+## 실제 CLIPPER 연결 (2026-09-14)
+
+[상세 결과·의존성 및 실행법](RESULTS_CLIPPER.md) · [9조합 CSV](results_clipper_macos_20260914/metrics.csv) · [선택 대응과 입력](results_clipper_macos_20260914/) · [C++ 어댑터](clipper_driver.cpp) · [Python 평가](clipper_experiment.py)
+
+이전 절의 미연결 설명은 기초 실험 당시 상태입니다. 공식 CLIPPER::solve를 연결해 선택된 대응으로 변환을 계산했습니다. seed=42 단일 시행이며 실제 SlideGraph와 SLAM은 여전히 미연결입니다. CLIPPER 단계는 C++ 컴파일과 Eigen 소스가 추가로 필요합니다. AISL에서는 research/object_loop_closure를 작업 루트로 사용합니다. GitHub 정리일은 2026-09-15입니다.
