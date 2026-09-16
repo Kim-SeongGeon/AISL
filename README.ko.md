@@ -23,6 +23,82 @@
 
 ---
 
+## 2026년 9월 16일
+
+### 📝 할 일 (2026-09-16)
+
+- [X] 9월 14일 실제 CLIPPER 연결을 30개 가상 지도 seed로 확장
+- [X] 3조건 × 30개 seed × 거리 임계값 3개 = 270조합 실행
+- [X] 전체 입력·선택 대응·지도·변환·평가 결과와 코드 보존
+- [X] 전체 pose 재계산, 집계 대조, 이전 seed=42 결과 일치 검증
+- [ ] 오대응한 3개 지도의 선택 대응과 기하 배치 분석
+
+### 📌 메모
+
+#### 실제 CLIPPER를 여러 가상 지도에서 반복 평가
+
+**1. 이전 실험과의 연결**
+
+9월 11일에는 class all-to-all 후보와 oracle 변환을, 9월 12일에는 학습용 consistency graph를 확인했다. 9월 14일에는 공식 CLIPPER를 연결해 seed=42의 9조합을 실행했다. 이번에는 같은 설정을 여러 지도에서 반복해 단일 지도에서 얻은 관찰이 유지되는지 확인했다. 실제 SlideGraph·장소 검색·SLAM 전체 평가는 아직 아니다.
+
+**2. 입력과 고정 설정**
+
+- seed 42~71의 30개 지도 × clean / extra_5 / noise_020 × epsilon 0.05 / 0.20 / 0.50m.
+- 기본 객체 10개. extra_5는 B에 객체 5개 추가, noise_020은 B 좌표에 표준편차 0.20m Gaussian 잡음.
+- 같은 지도에서 epsilon만 바꾸어 비교한다. 270개는 설정 조합 수이며 독립 지도 270개라는 뜻이 아니다.
+- 후보는 class all-to-all. 공식 CLIPPER v0.2.4의 solve, 기본 DSD_HEU, ones 초기값, kernel sigma=0.20m 고정.
+- 변환 방향 A→B, 참값 회전 30°·이동 (10, 5)m. 선택된 대응으로 2D 변환을 추정하고 정답 ID는 사후 평가에만 사용했다.
+- 기존 코드·바이너리 해시 일치 확인 후 맥북에서 실행. Python 3.12.14, 실행 OS는 manifest에 기록된 macOS-27.0-arm64. 설치·재빌드 없이 수행했다.
+
+**3. 결과: 평균이 좋아져도 모든 지도가 좋아지는 것은 아니다**
+
+각 행은 30개 seed의 평균이다. ±는 표본 표준편차이며 precision/recall은 지도별 값의 macro 평균이다. recall은 객체 대응 recall로, 장소 검색 Recall@K와 다르다.
+
+| 조건 | epsilon(m) | 선택 수 | precision | recall | 이동 오차(m) | yaw 오차(°) | 오답 포함 지도 |
+|---|---:|---:|---:|---:|---:|---:|---:|
+| clean | 0.05 / 0.20 / 0.50 각각 | 10.000 ± 0.000 | 100% | 100% | <1e-9 | <1e-9 | 각각 0/30 |
+| extra_5 | 0.05 / 0.20 / 0.50 각각 | 10.000 ± 0.000 | 100% | 100% | <1e-9 | <1e-9 | 각각 0/30 |
+| noise_020 | 0.05 | 2.467 ± 0.629 | 91.67% | 23.00% | 0.474 ± 1.009 | 11.890 ± 29.045 | 3/30 |
+| noise_020 | 0.20 | 4.367 ± 0.669 | 100% | 43.67% | 0.151 ± 0.080 | 1.628 ± 1.357 | 0/30 |
+| noise_020 | 0.50 | 6.067 ± 0.691 | 100% | 60.67% | 0.122 ± 0.066 | 1.303 ± 1.226 | 0/30 |
+
+무잡음·추가 객체의 180조합은 모두 정답 10쌍을 선택했다. 잡음 조건에서는 epsilon=0.05m일 때 아래 오대응이 발생했다. 앞선 seed=42의 precision 100%를 모든 지도에 일반화할 수 없다.
+
+| seed | 선택 수 / 정답 수 | 이동 오차(m) | yaw 오차(°) |
+|---|---:|---:|---:|
+| 47 | 2 / 0 | 0.968 | 108.734 |
+| 51 | 2 / 0 | 5.236 | 97.782 |
+| 69 | 2 / 1 | 2.534 | 83.964 |
+
+잡음 지도에서 epsilon 0.05→0.20으로 선택 수가 늘어난 30개 중 6개, 0.20→0.50으로 늘어난 29개 중 13개는 yaw 오차가 오히려 증가했다. 정답 대응이라도 좌표 잡음이 남으며, 거리 일관성을 만족하는 대응 수와 회전 정확도는 별개다. 선택 집합의 포함 관계나 오차 감소는 보장되지 않는다.
+
+**4. 검증한 범위와 한계**
+
+270개 고유 조합·9그룹 각 30행, 전 결과 pose 재계산·집계 평균 대조, seed=42의 이전 9개 선택 목록·pose 일치를 확인했다. 후보 부분집합·일대일 대응·pairwise consistency도 확인했다. solver 오류·대응 부족·퇴화는 0개이며 270개 모두 변환을 계산했다. **변환 계산 가능을 정합 성공률 100%로 해석하지 않는다.** 성공 기준 threshold는 아직 없다.
+
+30개 가상 지도와 고정 초기값에 대한 결과다. 별도 validation/test, 초기값별 평가, 객체 누락·class 오류·비겹침·실제 센서 지도는 미평가다. 이번 결과만으로 epsilon=0.50m를 최적값으로 확정하지 않는다.
+
+**5. 코드·전체 결과·재현 기록**
+
+- [반복 실험 코드](research/object_loop_closure/virtual_map/clipper_sweep.py)
+- [상세 보고서 및 재현 주의사항](research/object_loop_closure/virtual_map/RESULTS_CLIPPER_SWEEP.md)
+- [270조합 CSV](research/object_loop_closure/virtual_map/results_clipper_sweep_20260916/metrics.csv)
+- [평균·표준편차·중앙값·최댓값 및 paired 비교](research/object_loop_closure/virtual_map/results_clipper_sweep_20260916/summary.json)
+- [검증 기록](research/object_loop_closure/virtual_map/results_clipper_sweep_20260916/verification.json)
+- [환경·고정 commit·코드 및 바이너리 해시](research/object_loop_closure/virtual_map/results_clipper_sweep_20260916/manifest.json)
+- [270개 조합별 지도·선택·변환 및 solver 입력 전체](research/object_loop_closure/virtual_map/results_clipper_sweep_20260916/)
+- [첫 CLIPPER 연결·의존성과 빌드 방법](research/object_loop_closure/virtual_map/RESULTS_CLIPPER.md)
+
+AISL에서는 `research/object_loop_closure`를 작업 루트로 사용한다. 현재 반복 스크립트는 기존 manifest의 바이너리 SHA256까지 검사하므로 다른 PC에서 재빌드한 바이너리는 실행 전 검사에서 중단될 수 있다. 별도의 검증된 기준 manifest를 사용하는 이식성 보완이 필요하다. 원본 manifest를 덮어써서 검사를 통과시키지 않는다. 바이너리·third_party 전체는 업로드 대상에서 제외했다.
+
+### ✅ 결론
+
+단일 지도 실험을 30개 지도로 확장해, 작은 거리 임계값에서 발생하는 오대응과 대응 수 증가가 회전 오차 감소를 보장하지 않는 현상을 확인했다. 다음은 오대응한 seed 47·51·69의 기하 배치를 분석하는 것이다.
+
+<p><br></p>
+
+---
+
 ## 2026년 9월 14일
 
 ### 📝 할 일 (2026-09-14)

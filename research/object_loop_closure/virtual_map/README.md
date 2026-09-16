@@ -86,3 +86,9 @@ python3 -B consistency_graph.py --seed 42 --output results_graph_new
 [상세 결과·의존성 및 실행법](RESULTS_CLIPPER.md) · [9조합 CSV](results_clipper_macos_20260914/metrics.csv) · [선택 대응과 입력](results_clipper_macos_20260914/) · [C++ 어댑터](clipper_driver.cpp) · [Python 평가](clipper_experiment.py)
 
 이전 절의 미연결 설명은 기초 실험 당시 상태입니다. 공식 CLIPPER::solve를 연결해 선택된 대응으로 변환을 계산했습니다. seed=42 단일 시행이며 실제 SlideGraph와 SLAM은 여전히 미연결입니다. CLIPPER 단계는 C++ 컴파일과 Eigen 소스가 추가로 필요합니다. AISL에서는 research/object_loop_closure를 작업 루트로 사용합니다. GitHub 정리일은 2026-09-15입니다.
+
+## CLIPPER 30개 지도 반복 실험 (2026-09-16)
+
+[상세 보고서·재현 제한](RESULTS_CLIPPER_SWEEP.md) · [반복 코드](clipper_sweep.py) · [270조합 CSV](results_clipper_sweep_20260916/metrics.csv) · [통계](results_clipper_sweep_20260916/summary.json) · [검증](results_clipper_sweep_20260916/verification.json) · [환경·해시](results_clipper_sweep_20260916/manifest.json) · [전체 입력과 결과](results_clipper_sweep_20260916/)
+
+seed 42~71 × 3조건 × epsilon 3개를 기존 설정으로 실행했다. 잡음 조건 epsilon 0.05m에서 3/30 지도에 오대응이 있었으며 0.20/0.50m에서는 이번 표본의 precision이 100%였다. 모든 270조합의 변환 계산과 검증을 완료했지만 정합 성공 기준은 아직 없다. 다른 PC에서는 기존 바이너리 SHA256 검사에 대한 이식성 보완이 필요하므로 상세 보고서의 주의사항을 확인한다.

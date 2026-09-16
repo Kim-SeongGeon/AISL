@@ -1,0 +1,34 @@
+{
+  "status": "PASS",
+  "rows": 270,
+  "unique_combinations": 270,
+  "seed42_matches_prior": 9,
+  "pose_recomputed": 270,
+  "summary_means_checked": true,
+  "wrong_cases": [
+    {
+      "seed": 47,
+      "epsilon_m": 0.05,
+      "selected": 2,
+      "correct": 0,
+      "translation_error_m": 0.9677991674921391,
+      "yaw_error_deg": 108.73362415248452
+    },
+    {
+      "seed": 51,
+      "epsilon_m": 0.05,
+      "selected": 2,
+      "correct": 0,
+      "translation_error_m": 5.235563284708289,
+      "yaw_error_deg": 97.78229992523428
+    },
+    {
+      "seed": 69,
+      "epsilon_m": 0.05,
+      "selected": 2,
+      "correct": 1,
+      "translation_error_m": 2.5335922322672992,
+      "yaw_error_deg": 83.96365811579427
+    }
+  ]
+}
