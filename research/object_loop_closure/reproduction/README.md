@@ -2,7 +2,7 @@
 
 상태: 절차 초안. 이 폴더에는 SlideSLAM 소스 복사본이나 재현 성공 로그가 없습니다.
 
-1. [공식 저장소](https://github.com/KumarRobotics/SLIDE_SLAM)의 README와 사용할 revision을 확인합니다. 대화에서 확인한 master는 Ubuntu 20.04/ROS Noetic 기준이며 ROS2 포트와 실험을 혼합하지 않습니다.
+1. [공식 저장소](https://github.com/KumarRobotics/SLIDE_SLAM)의 README와 사용할 revision을 확인합니다. master는 Ubuntu 20.04/ROS Noetic 기준이며 ROS2 포트와 실험을 혼합하지 않습니다.
 2. 사용할 정확한 upstream commit SHA, submodule SHA, Docker image digest를 run manifest에 기록합니다. latest 태그만으로 재현 버전을 고정했다고 보지 않습니다.
 3. 공식 안내에 따라 별도 workspace에 clone/build합니다. 이 저장소의 third_party 디렉터리는 로컬 외부 소스용이며 버전 기록 없이 소스를 복사해 넣지 않습니다.
 4. 공식 processed-data demo를 먼저 확인하고, 실제 sensor front-end 실행과 구분합니다. 데이터 파일 checksum·sequence·frame 범위·모델 weights 출처를 기록합니다.
