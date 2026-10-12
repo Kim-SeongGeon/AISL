@@ -1,0 +1,63 @@
+{
+  "schema": "slide_slam_raw_7d_bundle_v1",
+  "created_utc": "2026-10-09T09:03:38.571008+00:00",
+  "input_bag": "/home/aisl/slideslam_docker_ws/experiment_logs/bundle_capture_20261009_064404/2026-10-09-07-03-48.bag",
+  "input_bag_size_bytes": 5232737,
+  "input_bag_sha256": "a9a68425de6a0ef7fee26476f15de9b07c269635fd357f6188ec305f594957d4",
+  "topic": "/robot0/PoseMstPairFromOthers",
+  "source_root": "/home/aisl/slideslam_docker_ws/src/SLIDE_SLAM",
+  "source_git_head": "63c78b9995b1e068dc0f185b3550e837b524833c",
+  "snapshot_count": 20,
+  "object_rows": 1302,
+  "objects_per_snapshot": [
+    12,
+    28,
+    39,
+    40,
+    42,
+    47,
+    51,
+    54,
+    57,
+    59,
+    65,
+    68,
+    75,
+    81,
+    82,
+    86,
+    94,
+    102,
+    109,
+    111
+  ],
+  "raw_label_counts_across_snapshots": {
+    "-2.0": 590,
+    "-1.0": 712
+  },
+  "bag_time_sec_first": 1730779773.0427551,
+  "bag_time_sec_last": 1730779870.0556645,
+  "robot_ids": [
+    0
+  ],
+  "fields_7d": [
+    "label_raw",
+    "x_raw",
+    "y_raw",
+    "z_raw",
+    "dim1_raw",
+    "dim2_raw",
+    "dim3_raw"
+  ],
+  "coordinate_frame": "unverified",
+  "units": "unverified",
+  "object_identity": "not_present_in_7d",
+  "semantic_class_interpretation": "not_inferred_from_negative_shape_labels",
+  "ground_truth": "not_used",
+  "random_seed": "not_applicable_read_only_export",
+  "transform_direction": "not_applicable_no_alignment_performed",
+  "outputs": {
+    "snapshots.json": "2c2f57f47050fb71c9b11b783b91b78ebf7b3cf2bda93ecf3c4bf862c7f87d4b",
+    "objects.csv": "73f79724771ff5668e7fa10e1af4cb934fd36354605677c5a2b7a189ef94efc6"
+  }
+}

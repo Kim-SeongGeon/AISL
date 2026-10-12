@@ -1,0 +1,47 @@
+{
+  "bundle": {
+    "count": 20,
+    "first_bag_sec": 1730779773.0427551,
+    "first_map_objects": 12,
+    "first_minus_input_first_header_sec": 5.101052522659302,
+    "last_bag_sec": 1730779870.0556645,
+    "last_map_objects": 111,
+    "last_minus_input_first_header_sec": 102.11396193504333,
+    "last_minus_input_last_header_sec": -2.2004380226135254,
+    "robot_ids": {
+      "0": 20
+    },
+    "topic": "/robot0/PoseMstPairFromOthers"
+  },
+  "input": {
+    "/aft_mapped_to_init": {
+      "child_frames": {
+        "body": 1001
+      },
+      "count": 1001,
+      "first_bag_sec": 1730779768.0417025,
+      "first_header_sec": 1730779768.0417025,
+      "frames": {
+        "camera_init": 1001
+      },
+      "last_bag_sec": 1730779872.2561026,
+      "last_header_sec": 1730779872.2561026
+    },
+    "/semantic_point_cloud": {
+      "count": 1001,
+      "first_bag_sec": 1730779768.0417025,
+      "first_header_sec": 1730779767.9417026,
+      "frames": {
+        "body": 1001
+      },
+      "last_bag_sec": 1730779872.2561026,
+      "last_header_sec": 1730779872.2561026
+    },
+    "same_index_header_delta_sec": {
+      "max_abs": 0.09999990463256836,
+      "median_abs": 0.0,
+      "pairs": 1001,
+      "within_0_01_sec": 1000
+    }
+  }
+}
