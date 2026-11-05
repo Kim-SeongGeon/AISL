@@ -23,6 +23,290 @@
 
 ---
 
+## 2026년 11월 5일
+
+### 📝 할 일 (2026-11-05)
+
+- [X] Object Budget 적용 후 Sequence 05에서 발생한 수행시간 증가 현상 재검증
+- [X] Budget 0 / 10000 / 24 / 32를 교차 순서로 반복 실행하고 Pair별 처리시간 비교
+- [X] \`loop_pairs_similarity()\` 단계별 C++ Profiling 및 \`load_cloud()\` 세부 계측
+- [X] Pair 100의 단독 실행과 이전 99개 Pair 처리 후 실행 비교
+- [X] 마지막 성능 진단의 한계 정리 및 Semantic/Geometric Object Descriptor 경량화 연구로 방향 전환
+- [ ] 독립적인 경량 Descriptor 프로토타입과 동일 차원·동일 연산 예산 Baseline 설계
+
+### 📌 메모
+
+#### Object Budget의 예상과 다른 실행시간 변화 분석
+
+**1. 문제와 교차 반복 검증**
+
+전날 실험에서 Object Budget-24의 평균 객체 수는 감소했지만 Sequence 05의 전체 처리시간은 증가했음. 객체가 실제로 제거되지 않은 Pair에서도 증가가 나타나 단순한 객체 개수 감소 효과로 설명하기 어려웠음. 실행 순서 편향을 줄이기 위해 Budget 0 / 10000 / 24 / 32를 서로 다른 순서로 4회씩 반복하고, 각 실행에서 동일한 200개 Pair를 비교했음.
+
+| Budget | 평균 내부 처리시간(ms/pair) | 표준편차(ms) | Baseline 대비 |
+|---|---:|---:|---:|
+| 0 (Baseline) | 5.0581 | 0.0283 | 기준 |
+| 10000 (객체 제거 없음) | 5.0527 | 0.0968 | 약 -0.1% |
+| 24 | 6.9490 | 0.0845 | 약 +37.4% |
+| 32 | 7.0002 | 0.0442 | 약 +38.4% |
+
+Budget 24에서는 110/200 Pair, Budget 32에서는 43/200 Pair의 객체 개수가 실제로 변경되었음. 그런데 **객체 개수가 변경되지 않은 Pair**에서도 처리시간이 각각 평균 약 +1.96ms, +1.97ms 증가했음. Budget 10000에서는 이런 증가가 관찰되지 않았음.
+
+**2. C++ 단계별 Profiling**
+
+원본과 기존 Object Budget 실험물을 보존하기 위해 별도 \`~/research/SGLC_objprofile\`에서 계측 코드를 추가했음. LiDAR 로딩, 클러스터링, 객체 선택, Graph 생성, Descriptor 생성, Matching, Outlier Pruning, RANSAC, Background 검증, 종료 구간을 나누어 측정했음.
+
+| 주요 구간 | Budget 0 (ms/pair) | Budget 24 (ms/pair) |
+|---|---:|---:|
+| Load | 1.3019 | 2.9126 |
+| Clustering | 2.9622 | 2.9906 |
+| Object Selection | 0.0005 | 0.0027 |
+| Graph Construction | 0.0825 | 0.0602 |
+| Matching | 0.0770 | 0.0547 |
+| Outlier Pruning | 0.1056 | 0.0531 |
+| RANSAC | 0.0085 | 0.0092 |
+| Finish | 0.1081 | 0.3793 |
+| **계측 구간 합계** | **5.2654** | **7.1113** |
+
+Object Selection의 직접 비용은 매우 작았고 Graph·Matching·Pruning은 빨라졌음. 반면 **Load와 Finish 구간의 증가가 전체 시간 증가에 크게 기여**했음. Finish에는 결과 계산뿐 아니라 지역 객체 정리와 계측 경계의 영향이 섞일 수 있으므로 순수 메모리 해제시간으로 해석하지 않음.
+
+**3. 독립 Pair와 연속 Pair 비교**
+
+객체가 제거되지 않는 Pair 100(객체 수 8개·14개)을 별도 프로세스에서 실행한 결과 Budget 0과 24의 시간 차이는 거의 없었음. 반면 앞선 99개 Pair를 같은 프로세스에서 처리한 뒤 Pair 100을 실행하면 Budget 24의 Load·Finish 및 전체 시간이 증가했음. 같은 관찰은 200개 Pair의 위치별 분석에서도 나타났음.
+
+마지막 Load 세부 계측에서는 연속 실행한 Pair 100에 대해 Budget 24의 전체 시간이 5.4261→8.3124ms로 증가했으며, 내부 측정상 LiDAR 파일 처리·Point 변환과 계측 외 잔여 구간 등이 영향을 받는 것으로 나타났음. 단, 로그 출력, 함수 반환, 메모리 할당 상태, 파일·CPU 캐시 등의 원인을 **분리하여 입증하지는 못했음**. 세부 계측값을 별도 Release 빌드의 최종 성능값으로 사용하지 않음.
+
+**4. 실험 환경 및 산출물**
+
+- 원본 SGLC: \`~/research/SGLC\`
+- 객체 수 제한 실험: \`~/research/SGLC_objbudget\`
+- 단계별 계측 전용: \`~/research/SGLC_objprofile\`
+- 대표 분석 파일: \`validation_objbudget/diagnostic_05/\`, \`stage_profile/stage_timing.csv\`, \`stage_profile/prefix_effect/\`, \`stage_profile/load_prefix_effect/\`
+- 위 경로는 **연구실 Ubuntu PC 로컬 경로**이며, 이번 README 기록만으로 코드·로그가 GitHub에 업로드된 것은 아님.
+
+### ✅ 결론
+
+Object Budget은 객체 기반 Graph·Matching 연산을 줄일 가능성을 보여주었지만 전체 실행시간 또는 Peak RSS 개선을 일반적으로 입증하지 못했음. 추가 지연은 반복 Pair 처리 시 Load·Finish 부근에서 관찰됐으나 직접 원인은 미확정임. 이 결과를 구현·평가상의 한계로 남기고, 다음 연구 단계에서는 **객체 개수 자체보다 Semantic/Geometric 정보를 적은 차원과 계산량으로 표현하는 Descriptor 설계**에 집중하기로 했음.
+
+<p><br></p>
+
+---
+
+## 2026년 11월 4일
+
+### 📝 할 일 (2026-11-04)
+
+- [X] SemanticKITTI Sequence 05/07 공식 Pair 전체에서 Scan Descriptor 단독 성능 평가
+- [X] Scan Descriptor 후보 검색 Recall@K, 거리 임계값 민감도 및 Graph/Background Ablation
+- [X] Graph/Background 결합 가중치 변화와 동일 후보 검증 예산 실험
+- [X] Object Budget 0/16/24/32 적용, 200 Pair 정확도 10회 반복 및 자원 사용량 5회 측정
+- [X] 객체 수 감소와 실제 실행시간·메모리 개선을 분리하여 해석
+
+### 📌 메모
+
+#### SGLC Descriptor의 장소 구별력과 경량화 가능성 조사
+
+**1. 공식 전체 Pair에서 Scan Descriptor 단독 평가**
+
+231D Scan Descriptor를 각 프레임당 한 번 생성·저장한 뒤, 공식 Pair에 대해 Cosine Similarity 기반 분류 성능을 계산했음. 이는 SGLC 최종 기하학적 검증을 포함하지 않는 별도 평가임.
+
+| 지표 | Sequence 05 | Sequence 07 |
+|---|---:|---:|
+| 전체 Scan | 2,761 | 1,101 |
+| 전체 평가 Pair | 483,285 | 185,133 |
+| Positive / Negative | 4,785 / 478,500 | 1,833 / 183,300 |
+| Scan Descriptor | 231D (float32 924 bytes) | 231D (float32 924 bytes) |
+| ROC-AUC | 0.979644 | 0.998779 |
+| Average Precision (AP) | 0.764433 | 0.935759 |
+| Maximum F1 | 0.731065 | 0.869540 |
+
+Positive와 Negative가 각각 100개인 균형 표본에서는 AP/F1이 더 높았지만, Positive가 약 1%인 전체 공식 Pair에서는 감소했음. **균형 표본의 높은 F1을 실제 불균형 검색 환경에 일반화하지 않음**. Maximum F1은 평가 데이터에서 사후 선택한 임계값 기준임.
+
+**2. 후보 검색 Recall과 거리 조건**
+
+과거 프레임을 대상으로 최근 100프레임을 제외한 정확한 Descriptor 거리 순위를 계산했음. 공식 코드의 KD-tree 자체 처리속도를 재현한 것은 아님.
+
+| 지표 | Sequence 05 | Sequence 07 |
+|---|---:|---:|
+| 시간 간격 조건을 만족하는 Positive Pair | 3,621 | 480 |
+| 정답이 존재하는 Query | 425 | 28 |
+| Pair Recall@50 (거리 조건 전) | 92.93% | 94.38% |
+| Query Hit@50 (거리 조건 전) | 98.12% | 100.00% |
+| Pair Recall@50 (Squared L2 < 0.15) | 58.96% | 93.96% |
+
+\`Pair Recall@K\`는 정답 프레임 쌍 기준, \`Query Hit@K\`는 Query에서 정답 하나 이상을 찾았는지 기준임. 제곱 L2 거리 0.15는 **기하학적 검증을 실행하는 Descriptor 거리 조건**이며, 최종 Loop Closure 성공률과 다름. Sequence 05에서는 이 조건으로 많은 정답 Pair가 추가 제외되어 임계값별 Recall과 예상 검증 후보 수를 조사했음.
+
+**3. Graph 183D와 Background 48D Ablation / 가중치 분석**
+
+SGLC의 231D Scan Descriptor는 Graph(183D)와 Background(48D) 구성 요소를 결합함. 개별 L2 정규화 후 결합하는 구조이므로 총 제곱 노름 기여는 각각 약 50%로 관찰됐음.
+
+| 구성 요소 | Seq.05 Max F1 | Seq.05 AP | Seq.07 Max F1 | Seq.07 AP |
+|---|---:|---:|---:|---:|
+| Full 231D | 0.7311 | 0.7644 | 0.8695 | 0.9358 |
+| Graph Only 183D | 0.6532 | 0.6606 | **0.9162** | **0.9669** |
+| Background Only 48D | 0.6327 | 0.6980 | 0.6138 | 0.6478 |
+
+Seq.05는 Full의 Pair 분류가 유리했지만 Background Only의 Query Hit@1이 높았음. Seq.07은 Graph Only의 AP/F1이 높아도 실제 Top-1 Query 검색 성능까지 가장 좋지는 않았음. 따라서 **Pair 분류 지표와 후보 검색 지표를 함께 평가해야 함**을 확인했음.
+
+Graph 결합 비율 \`α\`를 0~1로 변경했을 때 Seq.05에서는 Background 비중이 큰 \`α≈0.2\`, Seq.07에서는 \`α≈0.6\`이 일부 검색 지표에서 유리했음. 동일한 평균 검증 후보 수로 맞춘 사후 분석에서도 개선 사례가 있었으나, 각 평가 시퀀스의 분포를 이용해 임계값을 조정했으므로 **독립 테스트 일반화 성능으로 주장하지 않음**. 가중치 변경은 차원·저장 크기를 줄이지 않음.
+
+**4. Object Budget 0 / 16 / 24 / 32 실험**
+
+별도 Git Worktree \`~/research/SGLC_objbudget\`에서 Clustering 이후 객체 중심점이 가까운 순으로 최대 N개를 남기는 단순 대조군을 구현했음. Graph 및 Loop Pair 평가 경로에 적용했고, Node Descriptor·Matching·RANSAC의 원래 설계는 유지했음.
+
+| 지표 | Seq.05 Baseline | Seq.05 Budget 24 | Seq.07 Baseline | Seq.07 Budget 24 |
+|---|---:|---:|---:|---:|
+| 평균 사용 객체 수 | 21.62 | 17.64 | 40.04 | 22.64 |
+| 객체 수 감소율 | 기준 | 18.4% | 기준 | 43.5% |
+| 200 Pair × 10회 평균 F1 | 0.962111 | 0.962111 | 1.000000 | 1.000000 |
+| 200 Pair × 5회 평균 Wall Time(ms/pair) | 5.4226 | 7.2396 | 9.2461 | 7.6920 |
+| Peak RSS(MiB) | 86.37 | 89.04 | 85.71 | 86.82 |
+
+Budget 16은 Seq.07에서 평균 F1이 약 0.993944로 감소했고, Budget 24와 32는 해당 200 Pair 표본에서 평균 F1=1.0을 유지했음. **Budget 24는 Seq.05에서 약 33.5% 느려지고 Seq.07에서는 약 16.8% 빨라졌으며, 두 시퀀스 모두 Peak RSS 감소는 관찰되지 않았음.**
+
+단순한 Node Descriptor 원소 데이터량 감소를 실제 전체 프로세스 메모리 감소로 해석하지 않음. Clustering 이후 객체 수를 줄이므로 Clustering 자체의 비용도 줄어들지 않음.
+
+**5. 평가 범위와 재현 주의사항**
+
+- 이번 실험은 공식 Pair 및 별도로 구성한 200 Pair 평가이며, 전체 온라인 SLAM 궤적·재방문 검출 성능 검증이 아님.
+- 10회 F1 반복과 5회 시간 측정에서 RANSAC 무작위성을 완전히 통제하지 못했음.
+- 시간 비교는 실행 환경과 프로세스 메모리 상태의 영향이 있을 수 있으며, 추가 진단을 11월 5일에 진행함.
+- 연구실 Ubuntu PC의 \`SGLC_profile\`, \`SGLC_objbudget\`에 스크립트·설정·CSV·로그 보존. 저장소에 자동 반영된 것은 아님.
+
+### ✅ 결론
+
+SGLC Scan Descriptor의 Graph/Background 정보는 환경별로 다른 효과를 보였고, **객체 일부만 사용해도 특정 평가 표본의 정확도를 유지할 가능성**을 확인했음. 그러나 객체 수 제한만으로 전체 실행시간·Peak RSS 감소를 보장하지 못함. 새 경량 Descriptor에서는 차원·후보 검색·전체 처리비용을 각각 측정하고, 동일 차원 PCA 같은 강한 압축 Baseline과 비교할 필요가 있음.
+
+<p><br></p>
+
+---
+
+## 2026년 11월 3일
+
+### 📝 할 일 (2026-11-03)
+
+- [X] SAGE/SGLC 관련 연구 중 실제 재현 대상으로 SGLC 선정
+- [X] 연구실 Ubuntu PC에서 기존 SlideSLAM 작업 공간과 분리해 SGLC 설치·빌드 환경 점검
+- [X] 컴파일·의존성 문제를 해결하며 SGLC 평가 실행 경로 구성
+- [X] SemanticKITTI Sequence 05/07과 Semantic Prediction 기반 공식 Pair 평가 준비
+- [X] 기존 구현과 개인 Profiling 작업 공간을 분리하고 출력·설정을 보존
+
+### 📌 메모
+
+#### SGLC 구현 환경 구축과 Baseline 재현 시작
+
+**1. 연구의 출발점**
+
+SlideSLAM은 이미 연구실 Ubuntu PC에서 빌드·실행했고 SemanticKITTI 재생, 객체 지도 추출, SlideGraph→CLIPPER 실행 및 사용 필드 분석을 수행했음. 그러나 이를 Sequence 05/07 전체 SLAM 정량 재현이나 Loop Closure 성능 검증 완료로 취급하지 않음.
+
+SAGE 논문은 Semantic Graph Matching과 구조적 Descriptor 결합이라는 관련 연구로 분석하되, **이번 기간 실제 설치·실행·계측한 대상은 SGLC**임. SAGE의 독립 구현이나 정량 재현을 완료했다고 기록하지 않음.
+
+**2. 실험 환경 정리**
+
+- 연구실 Ubuntu PC에서 직접 실험 수행; 필요할 때 MacBook SSH 및 Tailscale로 원격 접속했음.
+- 기존 SlideSLAM 작업 공간은 보존하고 SGLC 원본·Profiling용 디렉터리를 분리했음.
+- CMake와 Ceres 2.1.0 기반 빌드 구성을 확인했고, 라이브러리·컴파일 오류 해결 후 \`eval_lcd_seq\`, Descriptor Profiling 등 평가 경로를 사용했음.
+- 입력은 SemanticKITTI Sequence 05/07의 LiDAR 점군 및 대응하는 Semantic Prediction을 사용했음.
+- 빌드 문제 해결 과정에서 생성한 임시 디렉터리·출력 파일은 재현 가능한 작업 공간과 구분해 정리했음.
+
+**3. 재현과 분석 범위**
+
+공식 평가 설정을 바탕으로 Pairwise Loop Closure 점수 계산 경로를 실행하고, 객체 형식, Semantic Graph 생성, Scan/Node Descriptor, 대응·RANSAC·배경 검증 경로를 분석했음. 이후 전체 공식 Pair와 분리된 Descriptor 평가 및 Profiling을 확장했음. 공식 Pair 직접 분류 평가 결과를 곧바로 온라인 SLAM 재현 결과로 해석하지 않음.
+
+기록된 대표 최종 SGLC Pair 평가의 Maximum F1은 Seq.05 약 0.9780, Seq.07 약 0.9989였음. 두 값은 **실험의 Pair 평가 조건 및 임계값 선택에 종속적**이며 새 데이터셋이나 전체 SLAM 성능을 보증하지 않음.
+
+**4. 작업 경로**
+
+- \`~/research/SGLC\`: 기존 SGLC 소스 및 공식 평가 기반 작업
+- \`~/research/SGLC_profile\`: Descriptor 추출·정량 분석·Profiling
+- 이후 별도 생성한 \`SGLC_objbudget\`, \`SGLC_objprofile\`은 후속 실험 기록에 설명함.
+- 대용량 SemanticKITTI 점군 및 Prediction 원본은 GitHub README나 코드 저장소에 직접 포함하지 않음.
+
+### ✅ 결론
+
+SGLC 평가 파이프라인을 실행할 수 있는 환경과 공식 Pair 기반 Baseline을 확보했음. 이후 연구에서는 최종 검출 정확도뿐 아니라 Descriptor 단독 구별력, 후보 검색 Recall, 저장 크기·생성시간·메모리를 구분해 평가하기로 했음.
+
+<p><br></p>
+
+---
+
+## 2026년 10월 20일
+
+### 📝 할 일 (2026-10-20)
+
+- [X] SAGE 관련 논문 \`Coupling Structural Descriptors With a Novel Semantic Graph Matching Approach for LiDAR Loop Detection\` 학습
+- [X] 논문의 Semantic Graph Matching 및 Structural Descriptor 결합 개념 정리
+- [X] 공분산·기하학적 제약, Clique/Maximum Clique 등 수학적 배경 학습
+- [ ] 논문 기법의 독립 구현·정량 실험으로 일반화 주장 검증
+
+### 📌 메모
+
+#### SAGE 논문 분석 — Semantic 정보와 구조적 관계의 역할
+
+**1. 논문 분석 목적**
+
+단순 객체 클래스 히스토그램과 달리, Semantic Object 간 관계를 활용해 장소를 구별하는 방법을 이해하고 경량 Descriptor 설계의 참고 대상으로 검토했음. Semantic Graph Matching의 기하학적 일관성 및 구조적 정보 결합이 어떤 역할을 하는지 학습했음.
+
+**2. 핵심 개념 정리**
+
+- **Semantic Graph**: 객체의 의미 정보와 공간적 연결 관계를 그래프 형태로 표현하는 접근.
+- **Structural Descriptor**: 객체 간 기하학적 구성이나 국소 구조를 특징으로 사용하여 의미 정보만 사용할 때의 모호함을 보완하려는 접근.
+- **공분산 표현**: 좌표 불확실성, 분산 및 상관관계를 행렬로 표현하는 수학적 도구를 학습했음. 논문 내 개별 수식의 정확한 사용 목적은 구현 단계에서 원문과 다시 대조할 필요가 있음.
+- **Clique / Maximum Clique**: 후보 대응의 일관성 그래프에서 서로 양립 가능한 대응들의 완전 연결 부분집합을 구하고, 그중 가장 큰 Clique를 찾는 개념을 학습했음. 반드시 올바른 최종 대응이라는 보장은 별도 검증이 필요함.
+
+**3. 연구 연결과 한계**
+
+Semantic+Geometric 정보를 함께 사용하는 것이 유리할 수 있다는 아이디어는 얻었으나, 이 시점에는 **SAGE의 코드를 설치하거나 독립 성능 재현을 완료하지 않았음**. 실제 구현 실험과 정량 비교는 이후 SGLC를 Baseline으로 수행했음.
+
+### ✅ 결론
+
+의미 정보와 객체 간 공간적 일관성을 함께 활용하는 Descriptor의 필요성을 연구 가설로 설정했음. 다만 기존 SAGE/SGLC와 차별화하려면 정보 결합 자체보다 **정확도 유지 조건에서의 차원·계산시간·메모리 효율**을 입증해야 함.
+
+<p><br></p>
+
+---
+
+## 2026년 10월 15일
+
+### 📝 할 일 (2026-10-15)
+
+- [X] 석사 개인 연구 마일스톤과 지도교수님 피드백을 기준으로 관련 논문 선정
+- [X] SGLC와 SAGE를 포함한 Semantic/Geometric Object 기반 LiDAR 장소 인식 연구 비교
+- [X] SlideSLAM의 실제 구현 완료 범위와 미완료 평가 구분
+- [X] 2027년 한국로봇종합학술대회 제출과 AIM/CASE 2027 후속 연구 연계 방향 검토
+- [ ] 선정 논문의 구현 재현 및 정확도·시간·메모리 Baseline 확보
+
+### 📌 메모
+
+#### 연구 방향 설정 — 경량 Semantic/Geometric Object Descriptor
+
+**1. 연구 목표**
+
+Semantic 및 기하학적 객체 정보를 효과적으로 인코딩하여 Loop Closure/Place Recognition 정확도를 유지하거나 높이면서, 실행시간과 메모리를 줄여 소형 로봇 환경에 적합하도록 하는 것이 목표임.
+
+**2. 검증해야 할 전제**
+
+- Semantic Object를 추가했을 때 Geometry-only 또는 단순 Baseline 대비 정확도 이점이 실제로 있는지.
+- 정보가 늘어도 Descriptor 크기, 생성·검색시간, Matching·검증 비용을 통제할 수 있는지.
+- 기존 SGLC/SAGE 등의 Semantic Graph 기법과 어떤 독립적인 차별점을 제시할 수 있는지.
+
+**3. 연구 대상의 구분**
+
+- **SlideSLAM**: Ubuntu 빌드·실행, SemanticKITTI 객체 지도 추출, SlideGraph→CLIPPER 경로 실행과 구조 분석까지 수행했음. 전체 05/07 SLAM 정량 재현은 미완료.
+- **SGLC**: 이 시점에는 아직 설치·실험 전. 이후 실제 재현과 Profiling의 중심 Baseline으로 선정함.
+- **SAGE**: 관련 논문 분석 대상으로 검토. SGLC와 동일한 코드 또는 동일한 실험 결과로 취급하지 않음.
+
+**4. 논문 일정과 기여 범위**
+
+단기적으로는 2027년 2월 한국로봇종합학술대회 제출을 위한 검증 가능한 초기 결과를 목표로, 장기적으로 AIM/CASE 2027 수준에서 여러 시퀀스와 실제 실행 자원까지 비교할 계획을 검토했음. 제안 방법의 신규성·일반화는 추가 실험으로 입증해야 함.
+
+### ✅ 결론
+
+기존 연구 구현·분석을 먼저 수행하고, 결과를 근거로 경량 Descriptor를 설계하기로 했음. **SAGE 논문 분석과 SGLC 실험 재현을 명확히 구분**하며, 동일 조건에서 정확도·생성시간·검색시간·메모리 사용량을 평가하는 원칙을 세웠음.
+
+<p><br></p>
+
+---
+
 ## 2026년 9월 16일
 
 ### 📝 할 일 (2026-09-16)
